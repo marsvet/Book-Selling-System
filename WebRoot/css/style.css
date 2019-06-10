@@ -1,0 +1,251 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	cursor: pointer;
+	outline: none;
+}
+
+header {
+	line-height: 80px;
+	box-shadow: 0 0 8px gray;
+	position: fixed;
+	width: 100%;
+	min-width: 1100px;
+	background-color: white;
+	z-index: 1;
+}
+
+header h1 {
+	font-size: 1.6em;
+	padding-left: 30px;
+	display: inline;
+	font-weight: normal;
+}
+
+header embed {
+	width: 40px;
+	vertical-align: middle;
+}
+
+header #search_input {
+	padding: 15px 25px;
+	width: calc(100% - 700px);
+	min-width: 500px;
+	border: none;
+	border-radius: 15px;
+	font-size: 1.2em;
+	background-color: #f2f3f5e0;
+	outline: none;
+	margin-left: 120px;
+}
+
+header button#select {
+	width: 70px;
+	padding: 10px;
+	margin-left: 10px;
+	background-color: #b7b8e2;
+	color: rgba(28, 21, 94, 0.842);
+	font-size: 1em;
+	border: none;
+	box-shadow: 0 0 3px rgb(182, 181, 181);
+	border-radius: 5px;
+}
+
+nav {
+	padding: 40px;
+	position: fixed;
+	margin-top: 80px;
+}
+
+nav a {
+	text-decoration: none;
+	color: black;
+}
+
+nav ul {
+	list-style-type: none;
+}
+
+nav ul div {
+	border-bottom: 1px solid #80808083;
+}
+
+nav ul div:last-child {
+	border: none;
+}
+
+nav ul li {
+	padding: 15px 100px 15px 30px;
+	border-top-right-radius: 30px;
+	border-bottom-right-radius: 30px;
+	cursor: pointer;
+}
+
+nav ul li:hover {
+	background-color: #a3a4e450;
+}
+
+.current {
+	background-color: #a3a4e4;
+}
+
+.current:hover {
+	background-color: #a3a4e4;
+}
+
+main {
+	padding: 15px 30px;
+	float: right;
+	width: calc(100vw - 370px);
+	margin-top: 90px;
+}
+
+div#result ul {
+	margin-left: 20px;
+	width: 85%;
+	min-width: 700px;
+}
+
+div#result li {
+	list-style-type: none;
+	display: block;
+	margin-top: 30px;
+	box-shadow: 0 0 5px #a3a4e4;
+	border-radius: 10px;
+	padding: 30px 40px;
+	font-size: 0.9em;
+}
+
+#result li div {
+	display: inline-block;
+}
+
+#result li h1 {
+	padding: 0 0 10px 0;
+	font-size: 1.7em;
+}
+
+#result li p {
+	padding: 0 0 3px 0;
+}
+
+#result li .column1 {
+	width: 55%;
+}
+
+#result li .column2 {
+	text-align: right;
+	width: 17%;
+}
+
+#result li .column3 {
+	width: 10%;
+}
+
+#result li .column4 {
+	width: 15%;
+	float: right;
+}
+
+#result li button {
+	border: none;
+	background-color: #c1eef3;
+	padding: 5px 10px;
+	border-radius: 10px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+#layer {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 1;
+	display: none;
+}
+
+#window, #sales-ticket {
+	background-color: white;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 30px 50px;
+	border: 1px solid rgba(128, 128, 128, 0.438);
+	border-radius: 5px;
+	display: none;
+}
+
+#window span, #window input, #window button {
+	display: block;
+}
+
+#window span {
+	margin-top: 10px;
+}
+
+#window input {
+	margin-top: 5px;
+}
+
+#window input {
+	padding: 10px;
+	width: 230px;
+	border: 1px gray solid;
+	outline-width: 0;
+	border-radius: 3px;
+}
+
+#window input:focus, #window button:hover, #sales-ticket button:hover {
+	box-shadow: 0 0 5px #36c3ca;
+}
+
+#window button, #sales-ticket button {
+	margin-top: 20px;
+	background-color: #4285f4;
+	min-width: 64px;
+	min-height: 32px;
+	color: white;
+	font-size: 1em;
+	cursor: pointer;
+	border: none;
+	border-radius: 3px;
+	font-weight: normal;
+	line-height: 1em;
+}
+
+#sales-ticket {
+	text-align: center;
+}
+
+#sales-ticket>h1 {
+	margin-bottom: 20px;
+}
+
+#sales-ticket button {
+	margin-top: 10px;
+}
+
+.table {
+	display: table;
+	border-spacing: 10px;
+}
+
+.table-row {
+	display: table-row;
+}
+
+.table-cell {
+	display: table-cell;
+	text-align: left;
+}
+
+.table-cell:first-child {
+	text-align: right;
+}

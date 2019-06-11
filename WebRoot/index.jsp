@@ -117,7 +117,7 @@ p#error {
 		xmlHttpRequest.onreadystatechange = function() {
 			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
 				if (xmlHttpRequest.responseText == "true") {
-					window.location.href = "book_search.jsp";
+					window.location.href = "books_sale.jsp";
 					return;
 				} else {
 					var oError = document.getElementById("error");

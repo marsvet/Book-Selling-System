@@ -12,7 +12,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 	private final String PASSWORD = "bookselling"; // 密码
 
 	public int check_admin(String mname, String passwd) throws ClassNotFoundException, SQLException {
-		String sql = "SELECT COUNT(*) FROM MANAGER WHERE MNAME='" + mname + "' AND PASSED='" + passwd + "'"; // 注意：SQL语句最后不能加分号
+		String sql = "SELECT COUNT(*) FROM MANAGER WHERE MNAME='" + mname + "' AND PASSWD='" + passwd + "'"; // 注意：SQL语句最后不能加分号
 		ResultSet rs = null; // 结果集对象
 		int count = 0;
 
@@ -85,7 +85,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 
 		String sql = null;
 
-		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "PHONE_NUMBER"
+		if ("ALL".equals(key))
 		{
 			if ("ALL".equals(value))
 				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID";

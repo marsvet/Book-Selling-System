@@ -170,7 +170,7 @@ div#result li {
 	display: none;
 }
 
-#window, #sales-ticket, #retail-return-message {
+#window, #sales-ticket, #retail-completed-message, #retail-failed-message {
 	background-color: white;
 	position: fixed;
 	left: 50%;
@@ -254,11 +254,11 @@ div#result li {
 	text-align: right;
 }
 
-#retail-return-message{
+#retail-completed-message, #retail-failed-message{
 	background-color: white;
 	font-size: 1.5em;
 }
-#retail-return-message embed{
+#retail-completed-message embed, #retail-failed-message embed{
 	vertical-align: middle;
 	width: 60px;
 	margin-right: 10px;

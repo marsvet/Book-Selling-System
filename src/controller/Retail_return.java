@@ -56,18 +56,41 @@ public class Retail_return extends HttpServlet {
 
 		String salesRecordJsonString = null;
 		try {
-			salesRecordJsonString = jdbcDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE" },
+			salesRecordJsonString = jdbcDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID" },
 					"SERIAL_NUMBER", serial_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		if ("[]".equals(salesRecordJsonString)) {
-			writer.write(0);
+			writer.write("0");
 			writer.close();
 			return;
 		}
 		JSONArray salesRecordJsonArray = new JSONArray(salesRecordJsonString);
 		JSONObject salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
+
+		String membersJsonString = null;
+		try {
+			membersJsonString = jdbcDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
+					memberName);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		if ("[]".equals(membersJsonString)) {
+			writer.write("0");
+			writer.close();
+			return;
+		}
+		JSONArray membersJsonArray = new JSONArray(membersJsonString);
+		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
+		
+		String member_id1 = salesRecordJsonObject.getString("MEMBER_ID");
+		String member_id2 = membersJsonObject.getString("MID");
+		if (!member_id1.equals(member_id2)){
+			writer.write("0");
+			writer.close();
+			return;
+		}
 
 		String ISBN = salesRecordJsonObject.getString("ISBN");
 		String booksJsonString = null;
@@ -78,16 +101,6 @@ public class Retail_return extends HttpServlet {
 		}
 		JSONArray booksJsonArray = new JSONArray(booksJsonString);
 		JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
-
-		String membersJsonString = null;
-		try {
-			membersJsonString = jdbcDao.search_members(new String[] { "BOOK_PURCHASE", "BALANCE" }, "MNAME",
-					memberName);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
-		JSONArray membersJsonArray = new JSONArray(membersJsonString);
-		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
 
 		int quantity = Integer.valueOf(salesRecordJsonObject.getString("QUANTITY"));
 		float retail_price = Float.valueOf(salesRecordJsonObject.getString("PRICE"));
@@ -116,7 +129,7 @@ public class Retail_return extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		writer.write(1);
+		writer.write("1");
 		writer.close();
 	}
 

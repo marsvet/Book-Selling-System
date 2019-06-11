@@ -9,7 +9,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8" />
-<title>图书销售系统 | 图书检索</title>
+<title>图书销售系统 | 会员管理</title>
 <link rel="stylesheet" href="css/style.css" />
 <style>
 #result .column4 {
@@ -106,7 +106,7 @@
 			<div>
 				<li>图书检索</li>
 				<li>零售退货</li>
-				<li class="current">会员查找</li>
+				<li class="current">会员管理</li>
 				<li>会员注册</li>
 			</div>
 			<div>

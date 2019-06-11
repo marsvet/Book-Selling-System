@@ -23,7 +23,8 @@
 		var layer = document.getElementById("layer");
 		var theWindow = layer.querySelector("#window");
 		var oButton = theWindow.querySelector("button");
-		var retailReturnMessage = layer.querySelector("#retail-return-message");
+		var retailCompletedMessage = layer.querySelector("#retail-completed-message");
+		var retailFailedMessage = layer.querySelector("#retail-failed-message");
 
 		layer.style.display = "block";
 		theWindow.style.display = "block";
@@ -45,21 +46,19 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == 1) {
-						retailReturnMessage.innerHTML = '<embed src="images/completed.svg" type="image/svg+xml" />退货成功';
+					if (xmlHttpRequest.responseText == "1") {
 						theWindow.style.display = "none";
-						retailReturnMessage.style.display = "block";
+						retailCompletedMessage.style.display = "block";
 						setTimeout(function() {
 							history.back(-1);
 						}, 1000);
 					} else {
-						retailReturnMessage.innerHTML = '<embed src="images/failed.svg" type="image/svg+xml" />请检查流水号和会员姓名是否填写正确';
 						theWindow.style.display = "none";
-						retailReturnMessage.style.display = "block";
+						retailFailedMessage.style.display = "block";
 						setTimeout(function() {
-							retailReturnMessage.style.display = "none";
+							retailFailedMessage.style.display = "none";
 							theWindow.style.display = "block";
-						}, 1500);
+						}, 2000);
 					}
 				}
 			};
@@ -102,7 +101,14 @@
 				type="text" />
 			<button type="button">确认退货</button>
 		</div>
-		<div id="retail-return-message"></div>
+		<div id="retail-completed-message">
+			<embed src="images/completed.svg" type="image/svg+xml" />
+			退货成功
+		</div>
+		<div id="retail-failed-message">
+			<embed src="images/failed.svg" type="image/svg+xml" />
+			请检查流水号和会员姓名是否填写正确
+		</div>
 	</div>
 </body>
 </html>

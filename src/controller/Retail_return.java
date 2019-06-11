@@ -17,7 +17,7 @@ import models.JDBCDao;
 /**
  * Servlet implementation class Book_sale
  */
-@WebServlet("/Book_sale")
+@WebServlet("/Retail_return")
 public class Retail_return extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

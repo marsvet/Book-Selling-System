@@ -170,7 +170,7 @@ div#result li {
 	display: none;
 }
 
-#window, #sales-ticket {
+#window, #sales-ticket, #retail-return-message {
 	background-color: white;
 	position: fixed;
 	left: 50%;
@@ -180,6 +180,10 @@ div#result li {
 	border: 1px solid rgba(128, 128, 128, 0.438);
 	border-radius: 5px;
 	display: none;
+}
+
+#window h1 {
+	text-align: center;
 }
 
 #window span, #window input, #window button {
@@ -209,8 +213,8 @@ div#result li {
 #window button, #sales-ticket button {
 	margin-top: 20px;
 	background-color: #4285f4;
-	min-width: 64px;
-	min-height: 32px;
+	padding: 0 15px;
+	min-height: 35px;
 	color: white;
 	font-size: 1em;
 	cursor: pointer;
@@ -248,4 +252,14 @@ div#result li {
 
 .table-cell:first-child {
 	text-align: right;
+}
+
+#retail-return-message{
+	background-color: white;
+	font-size: 1.5em;
+}
+#retail-return-message embed{
+	vertical-align: middle;
+	width: 60px;
+	margin-right: 10px;
 }

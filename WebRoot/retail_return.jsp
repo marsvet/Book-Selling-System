@@ -11,134 +11,60 @@
 <meta charset="UTF-8" />
 <title>图书销售系统 | 图书出售</title>
 <link rel="stylesheet" href="css/style.css" />
+<style>
+#window button {
+	margin-left: auto;
+	margin-right: auto;
+}
+</style>
 <script src="js/main.js"></script>
 <script>
 	window.onload = function() {
-		var searchInput = document.getElementById("search_input");
-		var selectButton = document.getElementById("select");
-		var oLi = document.querySelectorAll("nav>ul li");
-
-		for (var i = 0; i < oLi.length; i++) {
-			oLi[i].onclick = redirect;
-		}
-
-		selectButton.onclick = ajaxSearch;
-		searchInput.onkeypress = function(eOb) {
-			if (eOb.keyCode == 13)
-				// 判断是否为回车键
-				ajaxSearch();
-		};
-	};
-
-	function ajaxSearch() {
-		var searchInput = document.getElementById("search_input");
-		var value = searchInput.value;
-
-		if (value) {
-			var xmlHttpRequest = new XMLHttpRequest();
-
-			xmlHttpRequest.open("POST", "Book_search", true);
-			xmlHttpRequest.setRequestHeader(
-				"Content-Type",
-				"application/x-www-form-urlencoded"
-			);
-			xmlHttpRequest.send("value=" + value);
-			xmlHttpRequest.onreadystatechange = function() {
-				if (
-					xmlHttpRequest.readyState == 4 &&
-					xmlHttpRequest.status == 200
-				) {
-					var oUl = document.querySelector("div#result>ul");
-					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
-
-					oUl.innerHTML = "";
-
-					for (var i = 0; i < jsonObj.length; i++) {
-						var liHTML = '<li><div class="column1"><h1>';
-
-						liHTML += jsonObj[i]["TITLE"] + "</h1>";
-						liHTML += "<p>作者：" + jsonObj[i]["AUTHOR"] + "</p>";
-						liHTML += "<p>出版社：" + jsonObj[i]["PNAME"] + "</p>";
-						liHTML += "<p>ISBN：" + jsonObj[i]["ISBN"] + "</p>";
-						liHTML += '</div><div class="column2">';
-						liHTML += "<p>库存：" + "</p>";
-						liHTML += "<p>零售价：" + "</p>";
-						liHTML += "<p>最低折扣价：" + "</p>";
-						liHTML += '</div><div class="column3">';
-						liHTML += "<p>" + jsonObj[i]["INVENTORY"] + "</p>";
-						liHTML += "<p>" + jsonObj[i]["RETAIL_PRICE"] + "</p>";
-						liHTML += "<p>" + jsonObj[i]["LOWEST_DISCOUNT_PRICE"] + "</p>";
-						liHTML += '</div><div class="column4"><button type="button" class="sale-button">出售</button></div></li>';
-
-						oUl.innerHTML += liHTML;
-
-						var oButton = oUl.getElementsByClassName("sale-button");
-						for (var j = 0; j < oButton.length; j++)
-							oButton[j].onclick = bookSale;
-					}
-				}
-			};
-		}
-	}
-
-	function bookSale() {
-		var currentItem = this.parentElement.parentElement;
-		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)");
-		var inventory = currentItem.querySelector(".column3>p:first-child");
 		var layer = document.getElementById("layer");
-		var oInput = layer.getElementsByTagName("input");
-		var oButton0 = layer.getElementsByTagName("button")[0];
+		var theWindow = layer.querySelector("#window");
+		var oButton = theWindow.querySelector("button");
+		var retailReturnMessage = layer.querySelector("#retail-return-message");
 
 		layer.style.display = "block";
-		layer.querySelector("#window").style.display = "block";
+		theWindow.style.display = "block";
 
-		oButton0.onclick = function() {
+		oButton.onclick = function() {
+			var oInput = theWindow.querySelectorAll("input");
+
 			var xmlHttpRequest = new XMLHttpRequest();
-
-			xmlHttpRequest.open("POST", "Book_sale", true);
+			xmlHttpRequest.open("POST", "Retail_return", true);
 			xmlHttpRequest.setRequestHeader(
 				"Content-Type",
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"ISBN=" +
-				ISBN.innerHTML.slice(5) +
-				"&phone_number=" +
-				oInput[0].value +
-				"&quantity=" +
-				oInput[1].value
+				"serial_number=" + oInput[0].value + "&mname=" + oInput[1].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					var oDiv = document.querySelectorAll(".table-row>div:last-child");
-					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
-
-					oDiv[0].innerHTML = jsonObj["SERIAL_NUMBER"];
-					oDiv[1].innerHTML = jsonObj["ISBN"];
-					oDiv[2].innerHTML = jsonObj["TITLE"];
-					oDiv[3].innerHTML = jsonObj["AUTHOR"];
-					oDiv[4].innerHTML = jsonObj["MNAME"];
-					oDiv[5].innerHTML = jsonObj["UNIT_PRICE"];
-					oDiv[6].innerHTML = jsonObj["QUANTITY"];
-					oDiv[7].innerHTML = jsonObj["DATE_OF_SALE"];
-
-					layer.querySelector("#window").style.display = "none";
-					layer.querySelector("#sales-ticket").style.display = "block";
-					inventory.innerHTML = Number(inventory.innerHTML) - 1;
-
-					var oButton1 = layer.querySelector("#sales-ticket>button");
-					oButton1.onclick = function() {
-						layer.style.display = "none";
-						layer.querySelector("#window").style.display = "none";
-						layer.querySelector("#sales-ticket").style.display = "none";
-					};
+					if (xmlHttpRequest.responseText == 1) {
+						retailReturnMessage.innerHTML = '<embed src="images/completed.svg" type="image/svg+xml" />退货成功';
+						theWindow.style.display = "none";
+						retailReturnMessage.style.display = "block";
+						setTimeout(function() {
+							history.back(-1);
+						}, 1000);
+					} else {
+						retailReturnMessage.innerHTML = '<embed src="images/failed.svg" type="image/svg+xml" />请检查流水号和会员姓名是否填写正确';
+						theWindow.style.display = "none";
+						retailReturnMessage.style.display = "block";
+						setTimeout(function() {
+							retailReturnMessage.style.display = "none";
+							theWindow.style.display = "block";
+						}, 1500);
+					}
 				}
 			};
 		};
-	}
+	};
 </script>
 </head>
 <body>
@@ -147,15 +73,14 @@
 			<embed src="images/logo-line.svg" type="image/svg+xml" />
 			图书销售系统
 		</h1>
-		<input type="text" name="search_input" id="search_input"
-			placeholder="输入书名、作者、ISBN 或 出版社" />
-		<button type="button" id="select">查询</button>
+		<input type="text" name="search_input" id="search_input" disabled />
+		<button type="button" id="select" disabled>查询</button>
 	</header>
 	<nav>
 		<ul>
 			<div>
-				<li class="current">图书出售</li>
-				<li>零售退货</li>
+				<li>图书出售</li>
+				<li class="current">零售退货</li>
 				<li>会员管理</li>
 			</div>
 			<div>
@@ -170,55 +95,14 @@
 			</div>
 		</ul>
 	</nav>
-	<main>
-		<div id="result">
-			<ul></ul>
-		</div>
-	</main>
 	<div id="layer">
 		<div id="window">
-			<span>会员电话</span> <input type="text" /> <span class="not-block">购书数量</span>
-			<input type="number" />
-			<button type="button">出售</button>
+			<h1>输入小票信息</h1>
+			<span>流水号</span> <input type="text" /> <span>会员姓名</span> <input
+				type="text" />
+			<button type="button">确认退货</button>
 		</div>
-		<div id="sales-ticket">
-			<h1>销售小票</h1>
-			<div class="table">
-				<div class="table-row">
-					<div class="table-cell">流水号：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">ISBN：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">书名：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">作者：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">会员：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">单价：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">数量：</div>
-					<div class="table-cell"></div>
-				</div>
-				<div class="table-row">
-					<div class="table-cell">售出日期：</div>
-					<div class="table-cell"></div>
-				</div>
-			</div>
-			<button type="button">打印</button>
-		</div>
+		<div id="retail-return-message"></div>
 	</div>
 </body>
 </html>

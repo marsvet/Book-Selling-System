@@ -131,7 +131,7 @@ public class Book_sale extends HttpServlet {
 			e1.printStackTrace();
 		}
 		try {
-			jdbcDao.insert_into_sales_record(ISBN, retail_price, memberId, quantity);
+			jdbcDao.insert_into_sales_record(ISBN, retail_price * discount / 10, memberId, quantity);
 		} catch (ClassNotFoundException | SQLException e1) {
 			e1.printStackTrace();
 		}

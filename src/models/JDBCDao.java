@@ -97,7 +97,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			for (int i = 0; i < attrs.length - 1; i++)
 				sql += attrs[i] + ", ";
 			sql += attrs[attrs.length - 1]
-					+ " FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND PHONE_NUMBER='"
+					+ " FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND " + key + "='"
 					+ value + "'";
 		}
 

@@ -17,15 +17,15 @@
 	top: 42px;
 }
 
-#sales-ticket {
+.information-window {
 	text-align: center;
 }
 
-#sales-ticket>h1 {
+.information-window>h1 {
 	margin-bottom: 20px;
 }
 
-#sales-ticket button {
+.information-window button {
 	margin-top: 10px;
 }
 </style>
@@ -105,12 +105,21 @@
 		var inventory = currentItem.querySelector(".column3>p:first-child");
 		var layer = document.getElementById("layer");
 		var oInput = layer.getElementsByTagName("input");
-		var oButton0 = layer.getElementsByTagName("button")[0];
+		var confirmButton = layer.querySelector(".confirm");
+		var cancelButton = layer.querySelector(".cancel");
 
 		layer.style.display = "block";
-		layer.querySelector("#window").style.display = "block";
+		layer.querySelector(".form-window").style.display = "block";
 
-		oButton0.onclick = function() {
+		cancelButton.onclick = function() {
+			layer.style.display = "none";
+			layer.querySelector(".form-window").style.display = "none";
+		}
+
+		confirmButton.onclick = function() {
+			if (!oInput[0].value || !oInput[1].value)
+				return;
+
 			var xmlHttpRequest = new XMLHttpRequest();
 
 			xmlHttpRequest.open("POST", "Book_sale", true);
@@ -143,15 +152,14 @@
 					oDiv[6].innerHTML = jsonObj["QUANTITY"];
 					oDiv[7].innerHTML = jsonObj["DATE_OF_SALE"];
 
-					layer.querySelector("#window").style.display = "none";
-					layer.querySelector("#sales-ticket").style.display = "block";
+					layer.querySelector(".form-window").style.display = "none";
+					layer.querySelector(".information-window").style.display = "block";
 					inventory.innerHTML = Number(inventory.innerHTML) - 1;
 
-					var oButton1 = layer.querySelector("#sales-ticket>button");
-					oButton1.onclick = function() {
+					var printButton = layer.querySelector(".information-window>button");
+					printButton.onclick = function() {
 						layer.style.display = "none";
-						layer.querySelector("#window").style.display = "none";
-						layer.querySelector("#sales-ticket").style.display = "none";
+						layer.querySelector(".information-window").style.display = "none";
 					};
 				}
 			};
@@ -194,12 +202,14 @@
 		</div>
 	</main>
 	<div id="layer">
-		<div id="window">
-			<span>会员电话</span> <input type="text" /> <span class="not-block">购书数量</span>
-			<input type="number" />
-			<button type="button">出售</button>
+		<div class="form-window">
+			<h1>填写信息</h1>
+			<span>会员电话</span> <input type="text" /> <span>购书数量</span> <input
+				type="number" />
+			<button type="button" class="confirm">出售</button>
+			<button type="button" class="cancel">取消</button>
 		</div>
-		<div id="sales-ticket">
+		<div class="information-window">
 			<h1>销售小票</h1>
 			<div class="table">
 				<div class="table-row">

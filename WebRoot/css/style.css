@@ -170,8 +170,14 @@ div#result li {
 	display: none;
 }
 
-#window, #sales-ticket, #retail-completed-message,
-	#retail-failed-message {
+#layer embed {
+	vertical-align: middle;
+	width: 60px;
+	margin-right: 10px;
+}
+
+.form-window, .information-window, .success-message,
+	.fail-message {
 	background-color: white;
 	position: fixed;
 	left: 50%;
@@ -183,23 +189,23 @@ div#result li {
 	display: none;
 }
 
-#window h1 {
+.form-window h1 {
 	text-align: center;
+	font-weight: normal;
+	font-size: 1.6em;
+	padding-bottom: 10px;
 }
 
-#window span, #window input, #window button {
+.form-window span, .form-window input {
 	display: block;
 }
 
-#window span {
+.form-window span {
 	margin-top: 10px;
 }
 
-#window input {
+.form-window input {
 	margin-top: 5px;
-}
-
-#window input {
 	padding: 10px;
 	width: 230px;
 	border: 1px gray solid;
@@ -207,22 +213,33 @@ div#result li {
 	border-radius: 3px;
 }
 
-#window input:focus, #window button:hover, #sales-ticket button:hover {
-	box-shadow: 0 0 5px #36c3ca;
-}
-
-#window button, #sales-ticket button {
+.form-window button, .information-window button {
 	margin-top: 20px;
 	background-color: #4285f4;
 	padding: 0 15px;
 	min-height: 35px;
 	color: white;
 	font-size: 1em;
-	cursor: pointer;
 	border: none;
 	border-radius: 3px;
 	font-weight: normal;
 	line-height: 1em;
+}
+
+.form-window button {
+	display: inline-block;
+	float: right;
+}
+
+.form-window button.cancel {
+	margin-right: 15px;
+	background-color: white;
+	color: black;
+}
+
+.form-window input:focus, .form-window button:hover, .information-window button:hover
+	{
+	box-shadow: 0 0 5px #36c3ca;
 }
 
 .table {
@@ -241,4 +258,10 @@ div#result li {
 
 .table-cell:first-child {
 	text-align: right;
+}
+
+
+.success-message, .fail-message {
+	background-color: white;
+	font-size: 1.5em;
 }

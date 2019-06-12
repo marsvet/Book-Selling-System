@@ -11,37 +11,28 @@
 <meta charset="UTF-8" />
 <title>图书销售系统 | 图书出售</title>
 <link rel="stylesheet" href="css/style.css" />
-<style>
-#window button {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-#retail-completed-message, #retail-failed-message {
-	background-color: white;
-	font-size: 1.5em;
-}
-
-#retail-completed-message embed, #retail-failed-message embed {
-	vertical-align: middle;
-	width: 60px;
-	margin-right: 10px;
-}
-</style>
 <script src="js/main.js"></script>
 <script>
 	window.onload = function() {
 		var layer = document.getElementById("layer");
-		var theWindow = layer.querySelector("#window");
-		var oButton = theWindow.querySelector("button");
-		var retailCompletedMessage = layer.querySelector("#retail-completed-message");
-		var retailFailedMessage = layer.querySelector("#retail-failed-message");
+		var formWindow = layer.querySelector(".form-window");
+		var confirmButton = formWindow.querySelector(".confirm");
+		var cancelButton = formWindow.querySelector(".cancel");
+		var successMessage = layer.querySelector(".success-message");
+		var failMessage = layer.querySelector(".fail-message");
 
 		layer.style.display = "block";
-		theWindow.style.display = "block";
+		formWindow.style.display = "block";
+		
+		cancelButton.onclick = function() {
+			history.back(-1);
+		}
 
-		oButton.onclick = function() {
-			var oInput = theWindow.querySelectorAll("input");
+		confirmButton.onclick = function() {
+			var oInput = formWindow.querySelectorAll("input");
+			
+			if (!oInput[0].value || !oInput[1].value)
+				return;
 
 			var xmlHttpRequest = new XMLHttpRequest();
 			xmlHttpRequest.open("POST", "Retail_return", true);
@@ -58,17 +49,17 @@
 					xmlHttpRequest.status == 200
 				) {
 					if (xmlHttpRequest.responseText == "1") {
-						theWindow.style.display = "none";
-						retailCompletedMessage.style.display = "block";
+						formWindow.style.display = "none";
+						successMessage.style.display = "block";
 						setTimeout(function() {
 							history.back(-1);
 						}, 1000);
 					} else {
-						theWindow.style.display = "none";
-						retailFailedMessage.style.display = "block";
+						formWindow.style.display = "none";
+						failMessage.style.display = "block";
 						setTimeout(function() {
-							retailFailedMessage.style.display = "none";
-							theWindow.style.display = "block";
+							failMessage.style.display = "none";
+							formWindow.style.display = "block";
 						}, 2000);
 					}
 				}
@@ -106,17 +97,18 @@
 		</ul>
 	</nav>
 	<div id="layer">
-		<div id="window">
+		<div class="form-window">
 			<h1>输入小票信息</h1>
-			<span>流水号</span> <input type="text" /> <span>会员姓名</span> <input
-				type="text" />
-			<button type="button">确认退货</button>
+			<span>流水号</span> <input type="text" />
+			<span>会员姓名</span> <input type="text" />
+			<button type="button" class="confirm">确定</button>
+			<button type="button" class="cancel">取消</button>
 		</div>
-		<div id="retail-completed-message">
+		<div class="success-message">
 			<embed src="images/completed.svg" type="image/svg+xml" />
 			退货成功
 		</div>
-		<div id="retail-failed-message">
+		<div class="fail-message">
 			<embed src="images/failed.svg" type="image/svg+xml" />
 			请检查流水号和会员姓名是否填写正确
 		</div>

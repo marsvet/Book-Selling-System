@@ -170,7 +170,8 @@ div#result li {
 	display: none;
 }
 
-#window, #sales-ticket, #retail-completed-message, #retail-failed-message {
+#window, #sales-ticket, #retail-completed-message,
+	#retail-failed-message {
 	background-color: white;
 	position: fixed;
 	left: 50%;
@@ -224,18 +225,6 @@ div#result li {
 	line-height: 1em;
 }
 
-#sales-ticket {
-	text-align: center;
-}
-
-#sales-ticket>h1 {
-	margin-bottom: 20px;
-}
-
-#sales-ticket button {
-	margin-top: 10px;
-}
-
 .table {
 	display: table;
 	border-spacing: 10px;
@@ -252,14 +241,4 @@ div#result li {
 
 .table-cell:first-child {
 	text-align: right;
-}
-
-#retail-completed-message, #retail-failed-message{
-	background-color: white;
-	font-size: 1.5em;
-}
-#retail-completed-message embed, #retail-failed-message embed{
-	vertical-align: middle;
-	width: 60px;
-	margin-right: 10px;
 }

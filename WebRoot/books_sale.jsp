@@ -16,6 +16,18 @@
 	position: relative;
 	top: 42px;
 }
+
+#sales-ticket {
+	text-align: center;
+}
+
+#sales-ticket>h1 {
+	margin-bottom: 20px;
+}
+
+#sales-ticket button {
+	margin-top: 10px;
+}
 </style>
 <script src="js/main.js"></script>
 <script>

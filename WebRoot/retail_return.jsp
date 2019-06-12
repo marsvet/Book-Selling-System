@@ -16,6 +16,17 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+#retail-completed-message, #retail-failed-message {
+	background-color: white;
+	font-size: 1.5em;
+}
+
+#retail-completed-message embed, #retail-failed-message embed {
+	vertical-align: middle;
+	width: 60px;
+	margin-right: 10px;
+}
 </style>
 <script src="js/main.js"></script>
 <script>

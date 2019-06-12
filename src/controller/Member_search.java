@@ -51,7 +51,7 @@ public class Member_search extends HttpServlet {
 		String jsonString = null;
 		JDBCDao jdbcDao = new JDBCDao();
 		try {
-			jsonString = jdbcDao.memberSearch(value);
+			jsonString = jdbcDao.search_members(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

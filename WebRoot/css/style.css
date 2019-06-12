@@ -140,15 +140,15 @@ div#result li {
 
 #result li .column2 {
 	text-align: right;
-	width: 17%;
+	width: 15%;
 }
 
 #result li .column3 {
-	width: 10%;
+	width: 8%;
 }
 
 #result li .column4 {
-	width: 15%;
+	width: 20%;
 	float: right;
 }
 

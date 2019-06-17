@@ -41,7 +41,7 @@
 				// 判断是否为回车键
 				search();
 		};
-		
+
 		addButton.onclick = addMember;
 	};
 
@@ -88,8 +88,8 @@
 						if (jsonObj[i]["STATUS"] == 1)
 							liHTML += "<p>正常</p>";
 						else
-							liHTML += "<p>黑名单</p>";
-						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改会员资料</button><br><button type="button" class="recharge-button">充值</button><button type="button" class="report-loss-button">挂失</button><button type="button" class="delete-button">删除</button><br><button type="button" class="purchase-record-button">查看购书记录</button></div></li>';
+							liHTML += "<p>已挂失</p>";
+						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改会员资料</button><button type="button" class="recharge-button">充值</button><br><button type="button" class="report-loss-button">挂失</button><button type="button" class="release-loss-button">解挂</button><button type="button" class="delete-button">删除</button><br><button type="button" class="purchase-record-button">查看购书记录</button></div></li>';
 
 						oUl.innerHTML += liHTML;
 
@@ -103,6 +103,9 @@
 						var reportLossButton = document.getElementsByClassName("report-loss-button");
 						for (var j = 0; j < reportLossButton.length; j++)
 							reportLossButton[j].onclick = reportLoss;
+						var releaseLossButton = document.getElementsByClassName("release-loss-button");
+						for (var j = 0; j < releaseLossButton.length; j++)
+							releaseLossButton[j].onclick = releaseLoss;
 						var deleteButton = document.getElementsByClassName("delete-button");
 						for (var j = 0; j < deleteButton.length; j++)
 							deleteButton[j].onclick = deleteMember;
@@ -114,7 +117,7 @@
 			};
 		}
 	}
-	
+
 	function addMember() {
 		var layer = document.getElementById("layer");
 		var addWindow = layer.querySelector("#add-member");
@@ -123,13 +126,54 @@
 		var cancelButton = addWindow.querySelector(".cancel");
 		var successMessage = layer.querySelector(".success-message");
 		var failMessage = layer.querySelector(".fail-message");
-		
+
 		layer.style.display = "block";
 		addWindow.style.display = "block";
-		
+
 		cancelButton.onclick = function() {
 			layer.style.display = "none";
 			addWindow.style.display = "none";
+		}
+		
+		confirmButton.onclick = function() {
+			if (!oInput[0].value || !oInput[1].value || !oInput[2].value)
+				return;
+
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_insert", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"mname=" + oInput[0].value + "&phone_number=" + oInput[1].value + "&identification=" + oInput[2].value + "&members_group=" + oInput[3].value
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "注册成功";
+						addWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "注册失败";
+						addWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							addWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
 		}
 	}
 
@@ -159,56 +203,288 @@
 			layer.style.display = "none";
 			modifyWindow.style.display = "none";
 		}
+
+		confirmButton.onclick = function() {
+			if (!oInput[0].value || !oInput[1].value || !oInput[2].value)
+				return;
+
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_modify", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"option=1&phone_number=" + phoneNumber + "&mname=" + oInput[0].value +
+				"&new_phone_number=" + oInput[1].value + "&identification=" + oInput[2].value
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "修改成功";
+						modifyWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "修改失败";
+						modifyWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							modifyWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
+		}
 	}
 
 	function recharge() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+
 		var layer = document.getElementById("layer");
 		var rechargeWindow = layer.querySelector("#recharge");
 		var confirmButton = rechargeWindow.querySelector(".confirm");
 		var cancelButton = rechargeWindow.querySelector(".cancel");
 		var successMessage = layer.querySelector(".success-message");
 		var failMessage = layer.querySelector(".fail-message");
-		
+
 		layer.style.display = "block";
 		rechargeWindow.style.display = "block";
-		
+
 		cancelButton.onclick = function() {
 			layer.style.display = "none";
 			rechargeWindow.style.display = "none";
 		}
+
+		confirmButton.onclick = function() {
+			var oInput = document.querySelector("#recharge>input");
+
+			if (!oInput.value)
+				return;
+
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_modify", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"option=2&phone_number=" + phoneNumber + "&recharge_amount=" + oInput.value
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "充值成功";
+						rechargeWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "充值失败";
+						rechargeWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							rechargeWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
+		}
 	}
 
 	function reportLoss() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+
 		var layer = document.getElementById("layer");
 		var reportLossWindow = layer.querySelector("#report-loss");
 		var confirmButton = reportLossWindow.querySelector(".confirm");
 		var cancelButton = reportLossWindow.querySelector(".cancel");
 		var successMessage = layer.querySelector(".success-message");
 		var failMessage = layer.querySelector(".fail-message");
-		
+
 		layer.style.display = "block";
 		reportLossWindow.style.display = "block";
-		
+
 		cancelButton.onclick = function() {
 			layer.style.display = "none";
 			reportLossWindow.style.display = "none";
 		}
+
+		confirmButton.onclick = function() {
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_modify", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"option=3&phone_number=" + phoneNumber
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "挂失成功";
+						reportLossWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "挂失失败";
+						reportLossWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							reportLossWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
+		}
+	}
+
+	function releaseLoss() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+
+		var layer = document.getElementById("layer");
+		var releaseLossWindow = layer.querySelector("#release-loss");
+		var confirmButton = releaseLossWindow.querySelector(".confirm");
+		var cancelButton = releaseLossWindow.querySelector(".cancel");
+		var successMessage = layer.querySelector(".success-message");
+		var failMessage = layer.querySelector(".fail-message");
+
+		layer.style.display = "block";
+		releaseLossWindow.style.display = "block";
+
+		cancelButton.onclick = function() {
+			layer.style.display = "none";
+			releaseLossWindow.style.display = "none";
+		}
+
+		confirmButton.onclick = function() {
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_modify", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"option=4&phone_number=" + phoneNumber
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "已解除挂失";
+						releaseLossWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "解除挂失失败";
+						releaseLossWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							releaseLossWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
+		}
 	}
 
 	function deleteMember() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+		
 		var layer = document.getElementById("layer");
 		var deleteWindow = layer.querySelector("#delete");
 		var confirmButton = deleteWindow.querySelector(".confirm");
 		var cancelButton = deleteWindow.querySelector(".cancel");
 		var successMessage = layer.querySelector(".success-message");
 		var failMessage = layer.querySelector(".fail-message");
-		
+
 		layer.style.display = "block";
 		deleteWindow.style.display = "block";
-		
+
 		cancelButton.onclick = function() {
 			layer.style.display = "none";
 			deleteWindow.style.display = "none";
+		}
+
+		confirmButton.onclick = function() {
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_delete", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"phone_number=" + phoneNumber
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					if (xmlHttpRequest.responseText == "1") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "删除成功";
+						deleteWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = "删除失败";
+						deleteWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							deleteWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
 		}
 	}
 
@@ -246,7 +522,7 @@
 		</ul>
 	</nav>
 	<main>
-		<button type="button" class="add">＋  添加会员</button>
+		<button type="button" class="add">＋ 会员注册</button>
 		<div id="result">
 			<ul></ul>
 		</div>
@@ -256,6 +532,7 @@
 			<h1>会员注册</h1>
 			<span>姓名</span> <input type="text" /> <span>电话号码</span> <input
 				type="text" /> <span>身份证号码</span> <input type="text" />
+				<span>会员组</span> <input type="text" /> 
 			<button type="button" class="confirm">注册</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
@@ -272,12 +549,26 @@
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="alert-window" id="report-loss">
-			<p><embed src="images/alert.svg" type="image/svg+xml" />确定要挂失吗</p>
+			<p>
+				<embed src="images/alert.svg" type="image/svg+xml" />
+				确定要挂失吗
+			</p>
+			<button type="button" class="confirm">确定</button>
+			<button type="button" class="cancel">取消</button>
+		</div>
+		<div class="alert-window" id="release-loss">
+			<p>
+				<embed src="images/alert.svg" type="image/svg+xml" />
+				确定解除挂失吗
+			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="alert-window" id="delete">
-			<p><embed src="images/alert.svg" type="image/svg+xml" />确定删除该会员吗</p>
+			<p>
+				<embed src="images/alert.svg" type="image/svg+xml" />
+				确定删除该会员吗
+			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

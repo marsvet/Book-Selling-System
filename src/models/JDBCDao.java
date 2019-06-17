@@ -360,14 +360,14 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return result;
 	}
 
-	public boolean insert_into_members(String mname, String indentification_number, String phone_number,
+	public boolean insert_into_members(String mname, String identification_number, String phone_number,
 			String members_group) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		CallableStatement cstmt = connection.prepareCall("{CALL INSERT_INTO_MEMBERS(?, ?, ?, ?)}");
 		cstmt.setString(1, mname);
-		cstmt.setString(2, indentification_number);
+		cstmt.setString(2, identification_number);
 		cstmt.setString(3, phone_number);
 		cstmt.setString(4, members_group);
 

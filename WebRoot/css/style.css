@@ -201,7 +201,7 @@ div#result li {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	padding: 30px 50px;
+	padding: 30px 70px;
 	border: 1px solid rgba(128, 128, 128, 0.438);
 	border-radius: 5px;
 	display: none;

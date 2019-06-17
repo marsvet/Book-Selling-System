@@ -118,8 +118,8 @@ main>button.add {
 	font-size: 1em;
 }
 
-main>button.add:hover{
-	border:1px rgb(176, 174, 177) solid;
+main>button.add:hover {
+	border: 1px rgb(176, 174, 177) solid;
 	background-color: #eaeaf6;
 }
 
@@ -177,6 +177,29 @@ div#result li {
 	border-radius: 10px;
 	margin-bottom: 5px;
 	margin-right: 5px;
+}
+
+#pager {
+	margin-left: 20px;
+	width: 85%;
+	min-width: 700px;
+	margin-top: 30px;
+	text-align: center;
+	display: none;
+}
+
+#pager button {
+	border: none;
+	background-color: white;
+	font-size: 1em;
+}
+
+#pager #prev-page {
+	float: left;
+}
+
+#pager #next-page {
+	float: right;
 }
 
 #layer {

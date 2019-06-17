@@ -105,6 +105,24 @@ main {
 	margin-top: 90px;
 }
 
+main>button.add {
+	margin-left: 20px;
+	width: 85%;
+	min-width: 700px;
+	display: block;
+	border: 1px gray dashed;
+	background-color: white;
+	padding: 5px;
+	border-radius: 7px;
+	margin-top: 10px;
+	font-size: 1em;
+}
+
+main>button.add:hover{
+	border:1px rgb(176, 174, 177) solid;
+	background-color: #eaeaf6;
+}
+
 div#result ul {
 	margin-left: 20px;
 	width: 85%;
@@ -176,7 +194,7 @@ div#result li {
 	margin-right: 10px;
 }
 
-.form-window, .information-window, .success-message,
+.form-window, .information-window, .alert-window, .success-message,
 	.fail-message {
 	background-color: white;
 	position: fixed;
@@ -213,7 +231,7 @@ div#result li {
 	border-radius: 3px;
 }
 
-.form-window button, .information-window button {
+.form-window button, .information-window button, .alert-window button {
 	margin-top: 20px;
 	background-color: #4285f4;
 	padding: 0 15px;
@@ -226,20 +244,33 @@ div#result li {
 	line-height: 1em;
 }
 
-.form-window button {
+.form-window button, .alert-window button {
 	display: inline-block;
 	float: right;
 }
 
-.form-window button.cancel {
+.form-window button.cancel, .alert-window button.cancel {
 	margin-right: 15px;
 	background-color: white;
 	color: black;
 }
 
-.form-window input:focus, .form-window button:hover, .information-window button:hover
-	{
+.form-window input:focus, .form-window button:hover, .information-window button:hover,
+	.alert-window button:hover {
 	box-shadow: 0 0 5px #36c3ca;
+}
+
+.alert-window p {
+	text-align: left;
+	font-size: 1.8em;
+	margin-left: 55px;
+	margin-right: 80px;
+	position: relative;
+	top: 20px;
+}
+
+.success-message, .fail-message {
+	font-size: 1.5em;
 }
 
 .table {
@@ -258,10 +289,4 @@ div#result li {
 
 .table-cell:first-child {
 	text-align: right;
-}
-
-
-.success-message, .fail-message {
-	background-color: white;
-	font-size: 1.5em;
 }

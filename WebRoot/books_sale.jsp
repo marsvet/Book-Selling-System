@@ -40,15 +40,15 @@
 			oLi[i].onclick = redirect;
 		}
 
-		selectButton.onclick = ajaxSearch;
+		selectButton.onclick = search;
 		searchInput.onkeypress = function(eOb) {
 			if (eOb.keyCode == 13)
 				// 判断是否为回车键
-				ajaxSearch();
+				search();
 		};
 	};
 
-	function ajaxSearch() {
+	function search() {
 		var searchInput = document.getElementById("search_input");
 		var value = searchInput.value;
 

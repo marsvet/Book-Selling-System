@@ -106,11 +106,11 @@
 		</div>
 		<div class="success-message">
 			<embed src="images/completed.svg" type="image/svg+xml" />
-			退货成功
+			<span>退货成功</span>
 		</div>
 		<div class="fail-message">
 			<embed src="images/failed.svg" type="image/svg+xml" />
-			请检查流水号和会员姓名是否填写正确
+			<span>请检查流水号和会员姓名是否填写正确</span>
 		</div>
 	</div>
 </body>

@@ -165,6 +165,8 @@
 		var currentItem = this.parentElement.parentElement;
 		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)").innerHTML;
 		ISBN = ISBN.slice(5, ISBN.length);
+		var publisher = currentItem.querySelector(".column1>p:nth-child(3)").innerHTML;
+		publisher = publisher.slice(4, publisher.length);
 
 		var layer = document.getElementById("layer");
 		var returnBookWindow = layer.querySelector("#return-book");
@@ -194,7 +196,7 @@
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"option=1&ISBN=" + ISBN + "&quantity=-" + oInput.value
+				"option=1&ISBN=" + ISBN + "&publisher=" + publisher + "&quantity=-" + oInput.value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -229,6 +231,8 @@
 		var currentItem = this.parentElement.parentElement;
 		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)").innerHTML;
 		ISBN = ISBN.slice(5, ISBN.length);
+		var publisher = currentItem.querySelector(".column1>p:nth-child(3)").innerHTML;
+		publisher = publisher.slice(4, publisher.length);
 
 		var layer = document.getElementById("layer");
 		var restockWindow = layer.querySelector("#restock");
@@ -258,7 +262,7 @@
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"option=2&ISBN=" + ISBN + "&quantity=" + oInput.value
+				"option=2&ISBN=" + ISBN + "&publisher=" + publisher + "&quantity=" + oInput.value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (

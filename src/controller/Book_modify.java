@@ -51,14 +51,14 @@ public class Book_modify extends HttpServlet {
 
 		String option = request.getParameter("option");
 		String ISBN = request.getParameter("ISBN");
+		String pname = request.getParameter("publisher");
 
 		PrintWriter writer = response.getWriter();
 		JDBCDao jdbcDao = new JDBCDao();
 
-		switch (option) {
-		case "1":
-		case "2":
+		if ("1".equals(option) || "2".equals(option)) {
 			int quantity = Integer.valueOf(request.getParameter("quantity"));
+
 			String booksJsonString = null;
 			try {
 				booksJsonString = jdbcDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN);
@@ -70,6 +70,19 @@ public class Book_modify extends HttpServlet {
 			JSONArray booksJsonArray = new JSONArray(booksJsonString);
 			JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
 			int inventory = Integer.valueOf(booksJsonObject.getString("INVENTORY"));
+
+			String publisherJsonString = null;
+			try {
+				publisherJsonString = jdbcDao.search_publisher(new String[] { "BOOKS_NUM" }, "PNAME", pname);
+			} catch (ClassNotFoundException | SQLException e) {
+				writer.write("0");
+				writer.close();
+				return;
+			}
+			JSONArray publisherJsonArray = new JSONArray(publisherJsonString);
+			JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
+			int books_num = Integer.valueOf(publisherJsonObject.getString("BOOKS_NUM"));
+
 			try {
 				jdbcDao.update_books(new String[] { "INVENTORY" },
 						new String[] { String.valueOf(inventory + quantity) }, "ISBN", ISBN);
@@ -78,8 +91,16 @@ public class Book_modify extends HttpServlet {
 				writer.close();
 				return;
 			}
-			break;
-		case "3":
+
+			try {
+				jdbcDao.update_publisher(new String[] { "BOOKS_NUM" },
+						new String[] { String.valueOf(books_num + quantity) }, "PNAME", pname);
+			} catch (ClassNotFoundException | SQLException e) {
+				writer.write("0");
+				writer.close();
+				return;
+			}
+		} else {
 			String new_ISBN = request.getParameter("new_ISBN");
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
@@ -104,7 +125,6 @@ public class Book_modify extends HttpServlet {
 				writer.close();
 				return;
 			}
-			break;
 		}
 
 		writer.write("1");

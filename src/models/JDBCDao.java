@@ -521,13 +521,13 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int delete_from_manager(String mid) throws SQLException, ClassNotFoundException {
+	public int delete_from_manager(String phone_number) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		String sql = "DELETE FROM MANAGER WHERE MID=" + mid;
+		String sql = "DELETE FROM MANAGER WHERE PHONE_NUMBER=" + phone_number;
 
 		int count = stmt.executeUpdate(sql);
 

@@ -153,7 +153,7 @@
 
 					layer.querySelector(".form-window").style.display = "none";
 					layer.querySelector(".information-window").style.display = "block";
-					inventory.innerHTML = Number(inventory.innerHTML) - 1;
+					inventory.innerHTML = Number(inventory.innerHTML) - Number(oInput[1].value);
 
 					var printButton = layer.querySelector(".information-window>button");
 					printButton.onclick = function() {

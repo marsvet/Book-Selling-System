@@ -92,27 +92,25 @@
 						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改会员资料</button><button type="button" class="recharge-button">充值</button><br><button type="button" class="report-loss-button">挂失</button><button type="button" class="release-loss-button">解挂</button><button type="button" class="delete-button">删除</button><br><button type="button" class="purchase-record-button">查看购书记录</button></div></li>';
 
 						oUl.innerHTML += liHTML;
-
-
-						var modifyInfoButton = document.getElementsByClassName("modify-info-button");
-						for (var j = 0; j < modifyInfoButton.length; j++)
-							modifyInfoButton[j].onclick = modifyInfo;
-						var rechargeButton = document.getElementsByClassName("recharge-button");
-						for (var j = 0; j < rechargeButton.length; j++)
-							rechargeButton[j].onclick = recharge;
-						var reportLossButton = document.getElementsByClassName("report-loss-button");
-						for (var j = 0; j < reportLossButton.length; j++)
-							reportLossButton[j].onclick = reportLoss;
-						var releaseLossButton = document.getElementsByClassName("release-loss-button");
-						for (var j = 0; j < releaseLossButton.length; j++)
-							releaseLossButton[j].onclick = releaseLoss;
-						var deleteButton = document.getElementsByClassName("delete-button");
-						for (var j = 0; j < deleteButton.length; j++)
-							deleteButton[j].onclick = deleteMember;
-						var purchaseRecordButton = document.getElementsByClassName("purchaseRecordButton");
-						for (var j = 0; j < purchaseRecordButton.length; j++)
-							purchaseRecordButton[j].onclick = searchPurchaseRecord;
 					}
+					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
+					for (var j = 0; j < modifyInfoButton.length; j++)
+						modifyInfoButton[j].onclick = modifyInfo;
+					var rechargeButton = document.getElementsByClassName("recharge-button");
+					for (var j = 0; j < rechargeButton.length; j++)
+						rechargeButton[j].onclick = recharge;
+					var reportLossButton = document.getElementsByClassName("report-loss-button");
+					for (var j = 0; j < reportLossButton.length; j++)
+						reportLossButton[j].onclick = reportLoss;
+					var releaseLossButton = document.getElementsByClassName("release-loss-button");
+					for (var j = 0; j < releaseLossButton.length; j++)
+						releaseLossButton[j].onclick = releaseLoss;
+					var deleteButton = document.getElementsByClassName("delete-button");
+					for (var j = 0; j < deleteButton.length; j++)
+						deleteButton[j].onclick = deleteMember;
+					var purchaseRecordButton = document.getElementsByClassName("purchaseRecordButton");
+					for (var j = 0; j < purchaseRecordButton.length; j++)
+						purchaseRecordButton[j].onclick = searchPurchaseRecord;
 				}
 			};
 		}
@@ -134,7 +132,7 @@
 			layer.style.display = "none";
 			addWindow.style.display = "none";
 		}
-		
+
 		confirmButton.onclick = function() {
 			if (!oInput[0].value || !oInput[1].value || !oInput[2].value || !oInput[3].value)
 				return;
@@ -433,7 +431,7 @@
 		var currentItem = this.parentElement.parentElement;
 		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
 		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
-		
+
 		var layer = document.getElementById("layer");
 		var deleteWindow = layer.querySelector("#delete");
 		var confirmButton = deleteWindow.querySelector(".confirm");
@@ -531,8 +529,8 @@
 		<div class="form-window" id="add-member">
 			<h1>会员注册</h1>
 			<span>姓名</span> <input type="text" /> <span>电话号码</span> <input
-				type="text" /> <span>身份证号码</span> <input type="text" />
-				<span>会员组</span> <input type="text" /> 
+				type="text" /> <span>身份证号码</span> <input type="text" /> <span>会员组</span>
+			<input type="text" />
 			<button type="button" class="confirm">注册</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

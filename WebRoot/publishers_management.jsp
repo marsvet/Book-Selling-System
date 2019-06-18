@@ -71,15 +71,13 @@
 							'</h1></div><div class="column2"><p>从此出版社购书：</p></div><div class="column3"><p>' +
 							jsonObj[i]["BOOKS_NUM"] + '</p></div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
 						oUl.innerHTML += liHTML;
-
-
-						var modifyInfoButton = document.getElementsByClassName("modify-info-button");
-						for (var j = 0; j < modifyInfoButton.length; j++)
-							modifyInfoButton[j].onclick = modifyInfo;
-						var deleteButton = document.getElementsByClassName("delete-button");
-						for (var j = 0; j < deleteButton.length; j++)
-							deleteButton[j].onclick = deletePublisher;
 					}
+					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
+					for (var j = 0; j < modifyInfoButton.length; j++)
+						modifyInfoButton[j].onclick = modifyInfo;
+					var deleteButton = document.getElementsByClassName("delete-button");
+					for (var j = 0; j < deleteButton.length; j++)
+						deleteButton[j].onclick = deletePublisher;
 				}
 			};
 		}

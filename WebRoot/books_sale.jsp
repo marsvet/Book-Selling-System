@@ -89,11 +89,10 @@
 						liHTML += '</div><div class="column4"><button type="button" class="sale-button">出售</button></div></li>';
 
 						oUl.innerHTML += liHTML;
-
-						var oButton = oUl.getElementsByClassName("sale-button");
-						for (var j = 0; j < oButton.length; j++)
-							oButton[j].onclick = bookSale;
 					}
+					var oButton = oUl.getElementsByClassName("sale-button");
+					for (var j = 0; j < oButton.length; j++)
+						oButton[j].onclick = bookSale;
 				}
 			};
 		}

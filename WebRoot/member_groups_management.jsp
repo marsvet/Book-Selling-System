@@ -57,15 +57,13 @@
 					liHTML += jsonObj[i]["MNAME"] + '</h1></div><div class="column2"><p>折扣：</p></div><div class="column3"><p>' +
 						jsonObj[i]["DISCOUNT"] + '</p></div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
 					oUl.innerHTML += liHTML;
-
-
-					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
-					for (var j = 0; j < modifyInfoButton.length; j++)
-						modifyInfoButton[j].onclick = modifyInfo;
-					var deleteButton = document.getElementsByClassName("delete-button");
-					for (var j = 0; j < deleteButton.length; j++)
-						deleteButton[j].onclick = deleteMembersGroup;
 				}
+				var modifyInfoButton = document.getElementsByClassName("modify-info-button");
+				for (var j = 0; j < modifyInfoButton.length; j++)
+					modifyInfoButton[j].onclick = modifyInfo;
+				var deleteButton = document.getElementsByClassName("delete-button");
+				for (var j = 0; j < deleteButton.length; j++)
+					deleteButton[j].onclick = deleteMembersGroup;
 			}
 		};
 	}
@@ -222,15 +220,15 @@
 			);
 			xmlHttpRequest.send(
 				"mgname=" + mgname
-				
+
 			);
 			xmlHttpRequest.onreadystatechange = function() {
-							if (
+				if (
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
 					if (xmlHttpRequest.responseText == "1") {
-					    	var oSpan = successMessage.querySelector("span");
+						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "删除成功";
 						deleteWindow.style.display = "none";
 						successMessage.style.display = "block";
@@ -260,7 +258,7 @@
 			<embed src="images/logo-line.svg" type="image/svg+xml" />
 			图书销售系统
 		</h1>
-		<input type="text" name="search_input" id="search_input" disabled/>
+		<input type="text" name="search_input" id="search_input" disabled />
 		<button type="button" id="select" disabled>查询</button>
 	</header>
 	<nav>

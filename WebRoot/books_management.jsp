@@ -84,18 +84,16 @@
 					liHTML += '</div><div class="column4"><button type="button" class="return-book-button">退货</button><br><button type="button" class="restock-button">再进货</button><br><button type="button" class="modify-info-button">资料修改</button></div></li>';
 
 					oUl.innerHTML += liHTML;
-
-
-					var returnBookButton = document.getElementsByClassName("return-book-button");
-					for (var j = 0; j < returnBookButton.length; j++)
-						returnBookButton[j].onclick = returnBook;
-					var restockButton = document.getElementsByClassName("restock-button");
-					for (var j = 0; j < restockButton.length; j++)
-						restockButton[j].onclick = restock;
-					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
-					for (var j = 0; j < modifyInfoButton.length; j++)
-						modifyInfoButton[j].onclick = modifyInfo;
 				}
+				var returnBookButton = document.getElementsByClassName("return-book-button");
+				for (var j = 0; j < returnBookButton.length; j++)
+					returnBookButton[j].onclick = returnBook;
+				var restockButton = document.getElementsByClassName("restock-button");
+				for (var j = 0; j < restockButton.length; j++)
+					restockButton[j].onclick = restock;
+				var modifyInfoButton = document.getElementsByClassName("modify-info-button");
+				for (var j = 0; j < modifyInfoButton.length; j++)
+					modifyInfoButton[j].onclick = modifyInfo;
 			}
 		};
 	}
@@ -160,7 +158,7 @@
 			};
 		}
 	}
-	
+
 	function returnBook() {
 		var currentItem = this.parentElement.parentElement;
 		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)").innerHTML;

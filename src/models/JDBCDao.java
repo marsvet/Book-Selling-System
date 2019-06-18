@@ -1,7 +1,6 @@
 package models; // 该类属于 models 包
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -179,9 +178,9 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "MNAME"
 		{
 			if ("ALL".equals(value))
-				sql = "SELECT * FROM MANAGER";
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER";	// 不选择 PASSWORD 列
 			else
-				sql = "SELECT * FROM MANAGER WHERE MNAME='" + value + "' OR PHONE_NUMBER='" + value
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME='" + value + "' OR PHONE_NUMBER='" + value
 						+ "' OR IDENTIFICATION_NUMBER='" + value + "'";
 		} else {
 			sql = "SELECT ";
@@ -412,7 +411,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int insert_into_manager(String mname, String passwd, int permission, String indentification_number,
+	public int insert_into_manager(String mname, String passwd, int permission, String identification_number,
 			String phone_number) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
@@ -420,7 +419,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		Statement stmt = connection.createStatement();
 
 		String sql = "INSERT INTO MANAGER VALUES(NULL, '" + mname + "', '" + passwd + "', " + permission + ", '"
-				+ indentification_number + "', '" + phone_number + "')";
+				+ identification_number + "', '" + phone_number + "')";
 
 		int count = stmt.executeUpdate(sql);
 

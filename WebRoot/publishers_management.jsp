@@ -68,8 +68,8 @@
 					for (var i = 0; i < jsonObj.length; i++) {
 						var liHTML = '<li><div class="column1"><h1>';
 						liHTML += jsonObj[i]["PLOCATION"] + "：" + jsonObj[i]["PNAME"] +
-							'</h1></div><div class="column2">已购图书数量：</div><div class="column3">' +
-							jsonObj[i]["BOOKS_NUM"] + '</div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
+							'</h1></div><div class="column2"><p>从此出版社购书：</p></div><div class="column3"><p>' +
+							jsonObj[i]["BOOKS_NUM"] + '</p></div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
 						oUl.innerHTML += liHTML;
 
 

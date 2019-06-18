@@ -222,7 +222,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		String sql = null;
 
 		if ("ALL".equals(key) && "ALL".equals(value))	// key 有两种情况："ALL", "MNAME"
-			sql = "SELECT * FROM MEMBERS_GROUP";
+			sql = "SELECT * FROM MEMBERS_GROUP ORDER BY DISCOUNT";
 		else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -395,15 +395,14 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int insert_into_members_group(String mname, int point_conversion, float discount)
+	public int insert_into_members_group(String mname, float discount)
 			throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		String sql = "INSERT INTO MEMBERS_GROUP VALUES(NULL, '" + mname + "', " + point_conversion + ", " + discount
-				+ ")";
+		String sql = "INSERT INTO MEMBERS_GROUP VALUES(NULL, '" + mname + "', " + discount + ")";
 
 		int count = stmt.executeUpdate(sql);
 
@@ -507,13 +506,13 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int delete_from_members_group(String mid) throws SQLException, ClassNotFoundException {
+	public int delete_from_members_group(String mgname) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		String sql = "DELETE FROM MEMBERS_GROUP WHERE MID=" + mid;
+		String sql = "DELETE FROM MEMBERS_GROUP WHERE MNAME='" + mgname + "'";
 
 		int count = stmt.executeUpdate(sql);
 

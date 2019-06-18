@@ -13,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import models.JDBCDao;
 
 /**
- * Servlet implementation class Publisher_search
+ * Servlet implementation class Publisher_delete
  */
-@WebServlet("/Publisher_search")
-public class Publisher_search extends HttpServlet {
+@WebServlet("/Publisher_delete")
+public class Publisher_delete extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Publisher_search() {
+    public Publisher_delete() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -46,18 +46,20 @@ public class Publisher_search extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 
-		String value = request.getParameter("value");
-
-		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
-		try {
-			jsonString = jdbcDao.search_publisher(null, "ALL", value);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+		String pname = request.getParameter("pname");
 
 		PrintWriter writer = response.getWriter();
-		writer.write(jsonString);
+		JDBCDao jdbcDao = new JDBCDao();
+
+		try {
+			jdbcDao.delete_from_publisher(pname);
+		} catch (ClassNotFoundException | SQLException e) {
+			writer.write("0");
+			writer.close();
+			return;
+		}
+
+		writer.write("1");
 		writer.close();
 	}
 

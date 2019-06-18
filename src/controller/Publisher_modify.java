@@ -10,22 +10,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import models.JDBCDao;
 
 /**
- * Servlet implementation class Publisher_search
+ * Servlet implementation class Publisher_modify
  */
-@WebServlet("/Publisher_search")
-public class Publisher_search extends HttpServlet {
+@WebServlet("/Publisher_modify")
+public class Publisher_modify extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Publisher_search() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Publisher_modify() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -46,18 +49,23 @@ public class Publisher_search extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("application/json");
 
-		String value = request.getParameter("value");
-
-		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
-		try {
-			jsonString = jdbcDao.search_publisher(null, "ALL", value);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+		String pname = request.getParameter("pname");
+		String new_pname = request.getParameter("new_pname");
+		String plocation = request.getParameter("plocation");
 
 		PrintWriter writer = response.getWriter();
-		writer.write(jsonString);
+		JDBCDao jdbcDao = new JDBCDao();
+
+		try {
+			jdbcDao.update_publisher(new String[] { "PNAME", "PLOCATION" },
+					new String[] { new_pname, plocation }, "PNAME", pname);
+		} catch (ClassNotFoundException | SQLException e) {
+			writer.write("0");
+			writer.close();
+			return;
+		}
+
+		writer.write("1");
 		writer.close();
 	}
 

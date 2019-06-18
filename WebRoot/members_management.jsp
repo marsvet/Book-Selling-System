@@ -136,7 +136,7 @@
 		}
 		
 		confirmButton.onclick = function() {
-			if (!oInput[0].value || !oInput[1].value || !oInput[2].value)
+			if (!oInput[0].value || !oInput[1].value || !oInput[2].value || !oInput[3].value)
 				return;
 
 			var xmlHttpRequest = new XMLHttpRequest();

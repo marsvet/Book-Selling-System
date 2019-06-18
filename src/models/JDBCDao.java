@@ -45,7 +45,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID";
 			else // 特殊情况二：value 不为 "ALL" 时，sql 为一个多条件查询
 				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
-						+ value + "' OR TITLE='" + value + "' OR AUTHOR='" + value + "' OR PNAME='" + value + "')";
+						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%" + value + "%')";	// TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
 		} else { // 如果 key 的值为 "ISBN"，则以 ISBN 为查询条件查询
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -89,8 +89,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			if ("ALL".equals(value))
 				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID";
 			else
-				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND (MEMBERS.MNAME='"
-						+ value + "' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "')";
+				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND (MEMBERS.MNAME LIKE '%"
+						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "')";	// MERBERS.MNAME 列使用 LIKE 进行模糊查询
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -136,8 +136,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			if ("ALL".equals(value))
 				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER";
 			else
-				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME='" + value + "' OR PLOCATION='"
-						+ value + "'";
+				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value + "%' OR PLOCATION LIKE '%"
+						+ value + "%'";
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -180,7 +180,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			if ("ALL".equals(value))
 				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER";	// 不选择 PASSWORD 列
 			else
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME='" + value + "' OR PHONE_NUMBER='" + value
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME LIKE '%" + value + "%' OR PHONE_NUMBER='" + value
 						+ "' OR IDENTIFICATION_NUMBER='" + value + "'";
 		} else {
 			sql = "SELECT ";

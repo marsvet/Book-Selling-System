@@ -136,8 +136,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			if ("ALL".equals(value))
 				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER";
 			else
-				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value + "%' OR PLOCATION LIKE '%"
-						+ value + "%'";
+				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value + "%' OR PLOCATION='"
+						+ value + "'";
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)

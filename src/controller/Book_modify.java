@@ -105,6 +105,7 @@ public class Book_modify extends HttpServlet {
 			String title = request.getParameter("title");
 			String author = request.getParameter("author");
 			String publisher = request.getParameter("publisher");
+			String retail_price = request.getParameter("retail_price");
 
 			String publisherJsonString = null;
 			try {
@@ -118,8 +119,8 @@ public class Book_modify extends HttpServlet {
 			JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
 			String publisher_id = publisherJsonObject.getString("PID");
 			try {
-				jdbcDao.update_books(new String[] { "ISBN", "TITLE", "AUTHOR", "PUBLISHER_ID" },
-						new String[] { new_ISBN, title, author, publisher_id }, "ISBN", ISBN);
+				jdbcDao.update_books(new String[] { "ISBN", "TITLE", "AUTHOR", "PUBLISHER_ID", "retail_price" },
+						new String[] { new_ISBN, title, author, publisher_id, retail_price }, "ISBN", ISBN);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();

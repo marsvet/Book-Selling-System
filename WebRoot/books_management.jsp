@@ -308,6 +308,7 @@
 		publisher = publisher.slice(4, publisher.length);
 		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)").innerHTML;
 		ISBN = ISBN.slice(5, ISBN.length);
+		var retail_price = currentItem.querySelector(".column3>p:nth-child(2)").innerHTML;
 
 		var layer = document.getElementById("layer");
 		var modifyWindow = layer.querySelector("#modify-information");
@@ -321,6 +322,7 @@
 		oInput[1].value = title;
 		oInput[2].value = author;
 		oInput[3].value = publisher;
+		oInput[4].value = retail_price;
 		layer.style.display = "block";
 		modifyWindow.style.display = "block";
 
@@ -342,7 +344,8 @@
 			);
 			xmlHttpRequest.send(
 				"option=3&ISBN=" + ISBN + "&new_ISBN=" + oInput[0].value +
-				"&title=" + oInput[1].value + "&author=" + oInput[2].value + "&publisher=" + oInput[3].value
+				"&title=" + oInput[1].value + "&author=" + oInput[2].value + 
+				"&publisher=" + oInput[3].value + "&retail_price=" + oInput[4].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -364,6 +367,7 @@
 						currentItem.querySelector(".column1>p:nth-child(2)").innerHTML = "作者：" + oInput[2].value;
 						currentItem.querySelector(".column1>p:nth-child(3)").innerHTML = "出版社：" + oInput[3].value;
 						currentItem.querySelector(".column1>p:nth-child(4)").innerHTML = "ISBN：" + oInput[0].value;
+						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oInput[4].value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "修改失败";
@@ -444,7 +448,7 @@
 			<h1>图书资料修改</h1>
 			<span>ISBN</span> <input type="text" /> <span>书名</span> <input
 				type="text" /> <span>作者</span> <input type="text" /><span>出版社</span>
-			<input type="text" />
+			<input type="text" /><span>零售价</span> <input type="text" />
 			<button type="button" class="confirm">修改</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

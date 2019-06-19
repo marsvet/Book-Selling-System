@@ -193,6 +193,9 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
+						
+						/* 前端同步更新 */
+						currentItem.querySelector(".column1>h1").innerHTML = oInput[1].value + "：" + oInput[0].value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "修改失败";
@@ -251,6 +254,9 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
+						
+						/* 前端同步更新 */
+						currentItem.style.display = "none";
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "删除失败";

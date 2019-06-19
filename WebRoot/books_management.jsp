@@ -210,6 +210,10 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
+
+						/* 前端同步更新 */
+						var inventoryItem = currentItem.querySelector(".column3>p:first-child");
+						inventoryItem.innerHTML = Number(inventoryItem.innerHTML) - Number(oInput.value);
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "退货失败";
@@ -276,6 +280,10 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
+
+						/* 前端同步更新 */
+						var inventoryItem = currentItem.querySelector(".column3>p:first-child");
+						inventoryItem.innerHTML = Number(inventoryItem.innerHTML) + Number(oInput.value);
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "进货失败";
@@ -350,6 +358,12 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
+
+						/* 前端同步更新 */
+						currentItem.querySelector(".column1>h1").innerHTML = oInput[1].value;
+						currentItem.querySelector(".column1>p:nth-child(2)").innerHTML = "作者：" + oInput[2].value;
+						currentItem.querySelector(".column1>p:nth-child(3)").innerHTML = "出版社：" + oInput[3].value;
+						currentItem.querySelector(".column1>p:nth-child(4)").innerHTML = "ISBN：" + oInput[0].value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = "修改失败";

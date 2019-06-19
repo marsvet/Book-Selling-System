@@ -451,7 +451,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int insert_into_purchase_record(String ISBN, int pcount, float unit_price, int publisher_id)
+	public int insert_into_purchase_record(String ISBN, int pcount, float unit_price, String publisher_id)
 			throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 

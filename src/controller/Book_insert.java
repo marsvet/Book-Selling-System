@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import models.JDBCDao;
 
 /**
@@ -18,14 +21,14 @@ import models.JDBCDao;
 @WebServlet("/Book_insert")
 public class Book_insert extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Book_insert() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Book_insert() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -56,8 +59,24 @@ public class Book_insert extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		JDBCDao jdbcDao = new JDBCDao();
 
+		String publisherJsonString = null;
+		try {
+			publisherJsonString = jdbcDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME", publisher);
+		} catch (ClassNotFoundException | SQLException e) {
+			writer.write("0");
+			writer.close();
+			return;
+		}
+		JSONArray publisherJsonArray = new JSONArray(publisherJsonString);
+		JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
+		int books_num = Integer.valueOf(publisherJsonObject.getString("BOOKS_NUM"));
+		String publisher_id = publisherJsonObject.getString("PID");
+
 		try {
 			jdbcDao.insert_into_books(ISBN, title, author, quantity, retail_price, publisher);
+			jdbcDao.update_publisher(new String[] { "BOOKS_NUM" }, new String[] { String.valueOf(books_num + quantity) }, "PNAME",
+					publisher);
+			jdbcDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

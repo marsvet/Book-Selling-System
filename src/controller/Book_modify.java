@@ -61,7 +61,7 @@ public class Book_modify extends HttpServlet {
 
 			String booksJsonString = null;
 			try {
-				booksJsonString = jdbcDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN);
+				booksJsonString = jdbcDao.search_books(new String[] { "INVENTORY", "RETAIL_PRICE" }, "ISBN", ISBN);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -70,10 +70,11 @@ public class Book_modify extends HttpServlet {
 			JSONArray booksJsonArray = new JSONArray(booksJsonString);
 			JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
 			int inventory = Integer.valueOf(booksJsonObject.getString("INVENTORY"));
+			float retail_price = Float.valueOf(booksJsonObject.getString("RETAIL_PRICE"));
 
 			String publisherJsonString = null;
 			try {
-				publisherJsonString = jdbcDao.search_publisher(new String[] { "BOOKS_NUM" }, "PNAME", pname);
+				publisherJsonString = jdbcDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME", pname);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -82,19 +83,14 @@ public class Book_modify extends HttpServlet {
 			JSONArray publisherJsonArray = new JSONArray(publisherJsonString);
 			JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
 			int books_num = Integer.valueOf(publisherJsonObject.getString("BOOKS_NUM"));
+			String publisher_id = publisherJsonObject.getString("PID");
 
 			try {
 				jdbcDao.update_books(new String[] { "INVENTORY" },
 						new String[] { String.valueOf(inventory + quantity) }, "ISBN", ISBN);
-			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
-				writer.close();
-				return;
-			}
-
-			try {
 				jdbcDao.update_publisher(new String[] { "BOOKS_NUM" },
 						new String[] { String.valueOf(books_num + quantity) }, "PNAME", pname);
+				jdbcDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();

@@ -9,7 +9,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8" />
-<title>图书销售系统 | 图书出售</title>
+<title>图书销售系统 | 零售退货</title>
 <link rel="stylesheet" href="css/style.css" />
 <script src="js/main.js"></script>
 <script>

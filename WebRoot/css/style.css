@@ -27,7 +27,7 @@ header h1 {
 	font-weight: normal;
 }
 
-header embed {
+header img {
 	width: 40px;
 	vertical-align: middle;
 }
@@ -211,7 +211,7 @@ div#result li {
 	display: none;
 }
 
-#layer embed {
+#layer img {
 	vertical-align: middle;
 	width: 60px;
 	margin-right: 10px;

@@ -71,7 +71,7 @@
 <body>
 	<header>
 		<h1>
-			<embed src="images/logo-line.svg" type="image/svg+xml" />
+			<img src="images/logo-line.png">
 			图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input" disabled />
@@ -105,11 +105,11 @@
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<embed src="images/completed.svg" type="image/svg+xml" />
+			<img src="images/completed.png">
 			<span>退货成功</span>
 		</div>
 		<div class="fail-message">
-			<embed src="images/failed.svg" type="image/svg+xml" />
+			<img src="images/error.png">
 			<span>请检查流水号和会员姓名是否填写正确</span>
 		</div>
 	</div>

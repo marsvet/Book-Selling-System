@@ -22,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <body>
 	<header>
 		<h1>
-			<embed src="images/logo-line.svg" type="image/svg+xml" />
+			<img src="images/logo-line.png">
 			图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"

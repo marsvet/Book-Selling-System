@@ -462,7 +462,7 @@
 <body>
 	<header>
 		<h1>
-			<embed src="images/logo-line.svg" type="image/svg+xml" />
+			<img src="images/logo-line.png">
 			图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"
@@ -524,18 +524,18 @@
 		</div>
 		<div class="alert-window" id="delete">
 			<p>
-				<embed src="images/alert.svg" type="image/svg+xml" />
+				<img src="images/alert.png">
 				确定删除该管理员吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<embed src="images/completed.svg" type="image/svg+xml" />
+			<img src="images/completed.png">
 			<span></span>
 		</div>
 		<div class="fail-message">
-			<embed src="images/failed.svg" type="image/svg+xml" />
+			<img src="images/error.png">
 			<span></span>
 		</div>
 	</div>

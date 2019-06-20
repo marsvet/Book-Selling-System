@@ -32,7 +32,7 @@ header {
 	font-weight: bold;
 }
 
-header embed {
+header img {
 	width: 40px;
 	vertical-align: bottom;
 }
@@ -131,7 +131,7 @@ p#error {
 <body>
 	<div>
 		<header>
-			<embed src="images/logo-fill.svg" type="image/svg+xml" />
+			<img src="images/logo-fill.png">
 			图书销售系统
 		</header>
 		<main>

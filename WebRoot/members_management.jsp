@@ -22,6 +22,14 @@
 #result li .column1 {
 	width: 50%;
 }
+
+#record-window .table-window {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
+}
 </style>
 <script src="js/main.js"></script>
 <script>
@@ -108,7 +116,7 @@
 					var deleteButton = document.getElementsByClassName("delete-button");
 					for (var j = 0; j < deleteButton.length; j++)
 						deleteButton[j].onclick = deleteMember;
-					var purchaseRecordButton = document.getElementsByClassName("purchaseRecordButton");
+					var purchaseRecordButton = document.getElementsByClassName("purchase-record-button");
 					for (var j = 0; j < purchaseRecordButton.length; j++)
 						purchaseRecordButton[j].onclick = searchPurchaseRecord;
 				}
@@ -424,7 +432,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.querySelector(".column3>p:nth-child(3)").innerHTML = "正常";
 					} else {
@@ -486,7 +494,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.style.display = "none";
 					} else {
@@ -505,14 +513,55 @@
 	}
 
 	function searchPurchaseRecord() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+
+		var layer = document.getElementById("layer");
+		var tableWindow = layer.querySelector("#record-window>.table-window");
+
+		var xmlHttpRequest = new XMLHttpRequest();
+		xmlHttpRequest.open("POST", "Member_purchase_record_search", true);
+		xmlHttpRequest.setRequestHeader(
+			"Content-Type",
+			"application/x-www-form-urlencoded"
+		);
+		xmlHttpRequest.send(
+			"phone_number=" + phoneNumber
+		);
+		xmlHttpRequest.onreadystatechange = function() {
+			if (
+				xmlHttpRequest.readyState == 4 &&
+				xmlHttpRequest.status == 200
+			) {
+				var jsonObj = JSON.parse(xmlHttpRequest.responseText);
+				var tableHtml = '<table><tr><th>购买日期</th><th>书名</th><th>作者</th><th>数量</th><th>单价</th></tr>';
+				for (var i = 0; i < jsonObj.length && i < 10; i++)
+					tableHtml += '<tr><td>' + jsonObj[i]["DATE_OF_SALE"]
+						+ '</td><td>' + jsonObj[i]["TITLE"]
+						+ '</td><td>' + jsonObj[i]["AUTHOR"]
+						+ '</td><td>' + jsonObj[i]["QUANTITY"]
+						+ '</td><td>' + jsonObj[i]["PRICE"]
+						+ '</td></tr>';
+				tableHtml += '</table>';
+				tableWindow.innerHTML = tableHtml;
+
+				layer.style.display = "block";
+				tableWindow.style.display = "block";
+			}
+
+			layer.onclick = function() {
+				layer.style.display = "none";
+				tableWindow.style.display = "none";
+			}
+		}
 	}
 </script>
 </head>
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"
 			placeholder="输入姓名、电话 或 身份证号" />
@@ -566,35 +615,33 @@
 		</div>
 		<div class="alert-window" id="report-loss">
 			<p>
-				<img src="images/alert.png">
-				确定要挂失吗
+				<img src="images/alert.png"> 确定要挂失吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="alert-window" id="release-loss">
 			<p>
-				<img src="images/alert.png">
-				确定解除挂失吗
+				<img src="images/alert.png"> 确定解除挂失吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="alert-window" id="delete">
 			<p>
-				<img src="images/alert.png">
-				确定删除该会员吗
+				<img src="images/alert.png"> 确定删除该会员吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
+		<div id="record-window">
+			<div class="table-window"></div>
+		</div>
 		<div class="success-message">
-			<img src="images/completed.png">
-			<span></span>
+			<img src="images/completed.png"> <span></span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png">
-			<span></span>
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

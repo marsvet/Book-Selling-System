@@ -518,6 +518,7 @@
 		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
 
 		var layer = document.getElementById("layer");
+		var failMessage = layer.querySelector(".fail-message");
 		var tableWindow = layer.querySelector("#record-window>.table-window");
 
 		var xmlHttpRequest = new XMLHttpRequest();
@@ -535,24 +536,35 @@
 				xmlHttpRequest.status == 200
 			) {
 				var jsonObj = JSON.parse(xmlHttpRequest.responseText);
-				var tableHtml = '<table><tr><th>购买日期</th><th>书名</th><th>作者</th><th>数量</th><th>单价</th></tr>';
-				for (var i = 0; i < jsonObj.length && i < 10; i++)
-					tableHtml += '<tr><td>' + jsonObj[i]["DATE_OF_SALE"]
-						+ '</td><td>' + jsonObj[i]["TITLE"]
-						+ '</td><td>' + jsonObj[i]["AUTHOR"]
-						+ '</td><td>' + jsonObj[i]["QUANTITY"]
-						+ '</td><td>' + jsonObj[i]["PRICE"]
-						+ '</td></tr>';
-				tableHtml += '</table>';
-				tableWindow.innerHTML = tableHtml;
+				if (jsonObj.length > 0) {
+					var tableHtml = '<table><tr><th>购买日期</th><th>书名</th><th>作者</th><th>数量</th><th>单价</th></tr>';
+					for (var i = 0; i < jsonObj.length && i < 10; i++)
+						tableHtml += '<tr><td>' + jsonObj[i]["DATE_OF_SALE"]
+							+ '</td><td>' + jsonObj[i]["TITLE"]
+							+ '</td><td>' + jsonObj[i]["AUTHOR"]
+							+ '</td><td>' + jsonObj[i]["QUANTITY"]
+							+ '</td><td>' + jsonObj[i]["PRICE"]
+							+ '</td></tr>';
+					tableHtml += '</table>';
+					tableWindow.innerHTML = tableHtml;
 
-				layer.style.display = "block";
-				tableWindow.style.display = "block";
-			}
+					layer.style.display = "block";
+					tableWindow.style.display = "block";
 
-			layer.onclick = function() {
-				layer.style.display = "none";
-				tableWindow.style.display = "none";
+					layer.onclick = function() {
+						layer.style.display = "none";
+						tableWindow.style.display = "none";
+					}
+				} else {
+					var oSpan = failMessage.querySelector("span");
+					oSpan.innerHTML = "该会员无购书记录";
+					layer.style.display = "block";
+					failMessage.style.display = "block";
+					setTimeout(function() {
+						layer.style.display = "none";
+						failMessage.style.display = "none";
+					}, 1000);
+				}
 			}
 		}
 	}

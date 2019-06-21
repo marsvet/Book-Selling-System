@@ -218,7 +218,7 @@ div#result li {
 }
 
 .form-window, .information-window, .alert-window, .success-message,
-	.fail-message {
+	.fail-message, #print-window {
 	background-color: white;
 	position: fixed;
 	left: 50%;
@@ -294,6 +294,17 @@ div#result li {
 
 .success-message, .fail-message {
 	font-size: 1.5em;
+}
+
+table{
+	border-collapse: collapse;
+	text-align: center;
+	width: 800px;
+}
+
+table th, table td{
+	border: 1px solid black;
+	padding: 5px 10px;
 }
 
 .table {

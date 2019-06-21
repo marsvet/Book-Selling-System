@@ -45,7 +45,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID";
 			else // 特殊情况二：value 不为 "ALL" 时，sql 为一个多条件查询
 				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
-						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%" + value + "%')";	// TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
+						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
+						+ value + "%')"; // TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
 		} else { // 如果 key 的值为 "ISBN"，则以 ISBN 为查询条件查询
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -84,13 +85,14 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 
 		String sql = null;
 
-		if ("ALL".equals(key))
-		{
+		if ("ALL".equals(key)) {
 			if ("ALL".equals(value))
 				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID";
 			else
 				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND (MEMBERS.MNAME LIKE '%"
-						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "')";	// MERBERS.MNAME 列使用 LIKE 进行模糊查询
+						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "')";
+			// MERBERS.MNAME 列使用 LIKE 进行模糊查询
+
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -136,8 +138,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			if ("ALL".equals(value))
 				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER";
 			else
-				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value + "%' OR PLOCATION='"
-						+ value + "'";
+				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value
+						+ "%' OR PLOCATION='" + value + "'";
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -178,10 +180,12 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "MNAME"
 		{
 			if ("ALL".equals(value))
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER";	// 不选择 PASSWORD 列
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER"; // 不选择
+																											// PASSWORD
+																											// 列
 			else
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME LIKE '%" + value + "%' OR PHONE_NUMBER='" + value
-						+ "' OR IDENTIFICATION_NUMBER='" + value + "'";
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME LIKE '%"
+						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "'";
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -220,7 +224,8 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 
 		String sql = null;
 
-		if ("ALL".equals(key) && "ALL".equals(value))	// key 有两种情况："ALL", "MNAME"
+		if ("ALL".equals(key) && "ALL".equals(value)) // key 有两种情况："ALL",
+														// "MNAME"
 			sql = "SELECT * FROM MEMBERS_GROUP ORDER BY DISCOUNT";
 		else {
 			sql = "SELECT ";
@@ -261,7 +266,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		String sql = null;
 
 		if ("ALL".equals(key) && "ALL".equals(value))
-			sql = "SELECT * FROM SALES_RECORD";
+			sql = "SELECT * FROM SALES_RECORD ORDER BY SERIAL_NUMBER DESC";
 		else if ("MAX(SERIAL_NUMBER)".equals(key))
 			sql = "SELECT MAX(SERIAL_NUMBER) SERIAL_NUMBER FROM SALES_RECORD";
 		else {
@@ -284,7 +289,10 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
-				jsonObject.put(columnName, columnValue);
+				if ("DATE_OF_SALE".equals(columnName))
+					jsonObject.put(columnName, columnValue.substring(0, 10));
+				else
+					jsonObject.put(columnName, columnValue);
 			}
 			jsonArray.put(jsonObject);
 		}
@@ -303,7 +311,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		String sql = null;
 
 		if ("ALL".equals(key) && "ALL".equals(value))
-			sql = "SELECT * FROM PURCHASE_RECORD";
+			sql = "SELECT * FROM PURCHASE_RECORD ORDER BY SERIAL_NUMBER DESC";
 		else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -324,7 +332,10 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
-				jsonObject.put(columnName, columnValue);
+				if ("DATE_OF_PURCHASE".equals(columnName))
+					jsonObject.put(columnName, columnValue.substring(0, 10));
+				else
+					jsonObject.put(columnName, columnValue);
 			}
 			jsonArray.put(jsonObject);
 		}
@@ -394,8 +405,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int insert_into_members_group(String mname, float discount)
-			throws SQLException, ClassNotFoundException {
+	public int insert_into_members_group(String mname, float discount) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
@@ -436,9 +446,12 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		java.util.Date current_util_date = new java.util.Date();	// 获取当前时间
-		Date current_sql_date = new Date(current_util_date.getTime());	// 转换为 java.sql.Date 类型
-		String sale_of_date = current_sql_date.toString(); // 转化为 YYYY-MM-DD 格式的字符串
+		java.util.Date current_util_date = new java.util.Date(); // 获取当前时间
+		Date current_sql_date = new Date(current_util_date.getTime()); // 转换为
+																		// java.sql.Date
+																		// 类型
+		String sale_of_date = current_sql_date.toString(); // 转化为 YYYY-MM-DD
+															// 格式的字符串
 
 		String sql = "INSERT INTO SALES_RECORD VALUES(NULL, '" + ISBN + "', TO_DATE('" + sale_of_date
 				+ "','YYYY-MM-DD'), " + unit_price + ", " + member_id + ", 1, " + quantity + ")";
@@ -677,8 +690,7 @@ public class JDBCDao { // 专门用来操作数据库的类约定用Dao结尾
 		return count;
 	}
 
-	public int sales_record_transform_to_invalid(String serial_number)
-			throws SQLException, ClassNotFoundException {
+	public int sales_record_transform_to_invalid(String serial_number) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);

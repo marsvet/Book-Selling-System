@@ -152,7 +152,7 @@ public class Book_sale extends HttpServlet {
 		}
 		salesRecordJsonArray = new JSONArray(salesRecordJsonString);
 		salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
-		String date_of_sale = salesRecordJsonObject.getString("DATE_OF_SALE").substring(0, 10);
+		String date_of_sale = salesRecordJsonObject.getString("DATE_OF_SALE");
 		
 		JSONObject resultJson = new JSONObject();
 		resultJson.put("SERIAL_NUMBER", serial_number);

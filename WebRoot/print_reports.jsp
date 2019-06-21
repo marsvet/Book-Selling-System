@@ -75,7 +75,7 @@
 
 				if (mark == 0) {
 					var tableHtml = '<table><tr><th>流水号</th><th>ISBN</th><th>会员 ID</th><th>售出日期</th><th>售价</th><th>数量</th><th>是否有效</th></tr>';
-					for (var i = 0; i < jsonObj.length && i < 15; i++)
+					for (var i = 0; i < jsonObj.length && i < 10; i++)
 						tableHtml += '<tr><td>' + jsonObj[i]["SERIAL_NUMBER"]
 							+ '</td><td>' + jsonObj[i]["ISBN"]
 							+ '</td><td>' + jsonObj[i]["MEMBER_ID"]
@@ -88,7 +88,7 @@
 					tableWindow.innerHTML = tableHtml;
 				} else if (mark == 1) {
 					var tableHtml = '<table><tr><th>流水号</th><th>ISBN</th><th>出版社 ID</th><th>进货日期</th><th>进价</th><th>数量</th></tr>';
-					for (var i = 0; i < jsonObj.length && i < 15; i++)
+					for (var i = 0; i < jsonObj.length && i < 10; i++)
 						tableHtml += '<tr><td>' + jsonObj[i]["SERIAL_NUMBER"]
 							+ '</td><td>' + jsonObj[i]["ISBN"]
 							+ '</td><td>' + jsonObj[i]["PUBLISHER_ID"]
@@ -100,7 +100,7 @@
 					tableWindow.innerHTML = tableHtml;
 				} else {
 					var tableHtml = '<table><tr><th>姓名</th><th>电话号码</th><th>身份证号码</th><th>会员组</th><th>购书数量</th><th>余额</th><th>状态</th></tr>';
-					for (var i = 0; i < jsonObj.length && i < 15; i++) {
+					for (var i = 0; i < jsonObj.length && i < 10; i++) {
 						tableHtml += '<tr><td>' + jsonObj[i]["MNAME"]
 							+ '</td><td>' + jsonObj[i]["PHONE_NUMBER"]
 							+ '</td><td>' + jsonObj[i]["IDENTIFICATION_NUMBER"]

@@ -303,8 +303,37 @@ table{
 }
 
 table th, table td{
-	border: 1px solid black;
-	padding: 5px 10px;
+	padding: 10px 15px;
+	font-weight: normal;
+}
+
+tbody tr:nth-child(odd){
+	background-color: #E9F3F4;
+}
+
+tbody tr:nth-child(even){
+	background-color: white;
+}
+
+tbody tr:first-child{
+	background-color: #55A2CE;
+	color: white;
+}
+
+th:first-child {
+     border-radius: 9px 0 0 0;
+}
+ 
+th:last-child {
+     border-radius: 0 9px 0 0;
+}
+
+tr:last-child td:first-child {
+     border-radius: 0 0 0 9px;
+}
+ 
+tr:last-child td:last-child {
+     border-radius: 0 0 9px 0;
 }
 
 .table {

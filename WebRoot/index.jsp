@@ -117,8 +117,16 @@ p#error {
 		xmlHttpRequest.onreadystatechange = function() {
 			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
 				if (xmlHttpRequest.responseText == "1") {
-					document.cookie = "mname=" + mname;
-					document.cookie = "passwd=" + passwd;
+					var oCheckBox = document.getElementsByName("remember-me")[0];
+					if (oCheckBox.checked) {
+						var expireTime = new Date();
+						expireTime.setTime(expireTime.getTime() + 24 * 60 * 60 * 1000); // 过期时间：1天
+						document.cookie = "mname=" + mname + "; expires=" + expireTime.toGMTString();
+						document.cookie = "passwd=" + passwd + "; expires=" + expireTime.toGMTString();
+					} else {
+						document.cookie = "mname=" + mname;
+						document.cookie = "passwd=" + passwd;
+					}
 					window.location.href = "books_sale.jsp";
 				} else {
 					var oError = document.getElementById("error");

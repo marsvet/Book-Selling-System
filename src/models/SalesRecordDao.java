@@ -22,9 +22,9 @@ public class SalesRecordDao {
 
 		String sql = null;
 
-		if ("ALL".equals(key) && "ALL".equals(value))
+		if ("ALL".equals(key) && "ALL".equals(value))	// 如果 key 和 value 都是 ALL，选择所有记录
 			sql = "SELECT * FROM SALES_RECORD ORDER BY SERIAL_NUMBER DESC";
-		else if ("MAX(SERIAL_NUMBER)".equals(key))
+		else if ("MAX(SERIAL_NUMBER)".equals(key))		// 如果 key 是 MAX(SERIAL_NUMBER)，选择 MAX(SERIAL_NUMBER)
 			sql = "SELECT MAX(SERIAL_NUMBER) SERIAL_NUMBER FROM SALES_RECORD";
 		else {
 			sql = "SELECT ";
@@ -46,7 +46,7 @@ public class SalesRecordDao {
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
-				if ("DATE_OF_SALE".equals(columnName))
+				if ("DATE_OF_SALE".equals(columnName))		// 本系统的日期只精确到“日”，所以这里去掉“时分秒”
 					jsonObject.put(columnName, columnValue.substring(0, 10));
 				else
 					jsonObject.put(columnName, columnValue);
@@ -68,12 +68,9 @@ public class SalesRecordDao {
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		java.util.Date current_util_date = new java.util.Date(); // 获取当前时间
-		Date current_sql_date = new Date(current_util_date.getTime()); // 转换为
-																		// java.sql.Date
-																		// 类型
-		String sale_of_date = current_sql_date.toString(); // 转化为 YYYY-MM-DD
-															// 格式的字符串
+		java.util.Date current_util_date = new java.util.Date(); // 创建 java.util.Date 对象，获取当前时间
+		Date current_sql_date = new Date(current_util_date.getTime());	// 将 java.util.Date 对象转换为 java.sql.Date 对象
+		String sale_of_date = current_sql_date.toString();	// 将 java.sql.date 对象转化为 YYYY-MM-DD 格式的字符串
 
 		String sql = "INSERT INTO SALES_RECORD VALUES(NULL, '" + ISBN + "', TO_DATE('" + sale_of_date
 				+ "','YYYY-MM-DD'), " + unit_price + ", " + member_id + ", 1, " + quantity + ")";

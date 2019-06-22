@@ -21,8 +21,7 @@ public class MemberGroupDao {
 
 		String sql = null;
 
-		if ("ALL".equals(key) && "ALL".equals(value)) // key 有两种情况："ALL",
-														// "MNAME"
+		if ("ALL".equals(key) && "ALL".equals(value)) // key 有两种情况："ALL", "MNAME"
 			sql = "SELECT * FROM MEMBERS_GROUP ORDER BY DISCOUNT";
 		else {
 			sql = "SELECT ";

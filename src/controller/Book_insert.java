@@ -47,10 +47,11 @@ public class Book_insert extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		response.setCharacterEncoding("utf-8");
-		response.setContentType("application/json");
+		request.setCharacterEncoding("utf-8"); // 设置 POST 请求的编码
+		response.setCharacterEncoding("utf-8"); // 设置响应的编码
+		response.setContentType("application/json"); // 设置响应的 Content-Type
 
+		/* 从前端发来的请求中获取需要的值 */
 		String ISBN = request.getParameter("ISBN");
 		String title = request.getParameter("title");
 		String author = request.getParameter("author");
@@ -58,16 +59,17 @@ public class Book_insert extends HttpServlet {
 		float retail_price = Float.valueOf(request.getParameter("retail_price"));
 		String publisher = request.getParameter("publisher");
 
-		PrintWriter writer = response.getWriter();
+		PrintWriter writer = response.getWriter();	// 实例化输出流对象，通过输出流对象将内容传到前端
 		BooksDao booksDao = new BooksDao();
 		PublisherDao publisherDao = new PublisherDao();
 		PurchaseRecordDao purchaseRecordDao = new PurchaseRecordDao();
 
 		String publisherJsonString = null;
 		try {
-			publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME", publisher);
+			publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME",
+					publisher);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("0");		// sql 语句执行失败，则向前端返回 "0"
 			writer.close();
 			return;
 		}
@@ -78,8 +80,8 @@ public class Book_insert extends HttpServlet {
 
 		try {
 			booksDao.insert_into_books(ISBN, title, author, quantity, retail_price, publisher);
-			publisherDao.update_publisher(new String[] { "BOOKS_NUM" }, new String[] { String.valueOf(books_num + quantity) }, "PNAME",
-					publisher);
+			publisherDao.update_publisher(new String[] { "BOOKS_NUM" },
+					new String[] { String.valueOf(books_num + quantity) }, "PNAME", publisher);
 			purchaseRecordDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
@@ -87,7 +89,7 @@ public class Book_insert extends HttpServlet {
 			return;
 		}
 
-		writer.write("1");
+		writer.write("1");	// sql 语句全部执行成功，向前端返回 "1"
 		writer.close();
 	}
 

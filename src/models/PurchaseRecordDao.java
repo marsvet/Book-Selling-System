@@ -44,7 +44,7 @@ public class PurchaseRecordDao {
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
-				if ("DATE_OF_PURCHASE".equals(columnName))
+				if ("DATE_OF_PURCHASE".equals(columnName))		// 本系统的日期只精确到“日”，所以这里去掉“时分秒”
 					jsonObject.put(columnName, columnValue.substring(0, 10));
 				else
 					jsonObject.put(columnName, columnValue);
@@ -66,12 +66,13 @@ public class PurchaseRecordDao {
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 		Statement stmt = connection.createStatement();
 
-		java.util.Date current_util_date = new java.util.Date();
-		Date current_sql_date = new Date(current_util_date.getTime());
-		String purchase_of_date = current_sql_date.toString();
+		java.util.Date current_util_date = new java.util.Date();	// 创建 java.util.Date 对象，获取当前时间
+		Date current_sql_date = new Date(current_util_date.getTime());	// 将 java.util.Date 对象转换为 java.sql.Date 对象
+		String purchase_of_date = current_sql_date.toString();	// 将 java.sql.date 对象转化为 YYYY-MM-DD 格式的字符串
 
 		String sql = "INSERT INTO PURCHASE_RECORD VALUES(NULL, '" + ISBN + "', " + pcount + ", " + unit_price
 				+ ", TO_DATE('" + purchase_of_date + "','YYYY-MM-DD'), " + publisher_id + ")";
+					// TO_DATE 是 oracle 数据库中的一个函数
 
 		int count = stmt.executeUpdate(sql);
 

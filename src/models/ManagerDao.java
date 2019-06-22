@@ -22,14 +22,12 @@ public class ManagerDao {
 
 		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "MNAME"
 		{
-			if ("ALL".equals(value))
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER"; // 不选择
-																											// PASSWORD
-																											// 列
-			else
+			if ("ALL".equals(value))	// 如果 key 和 value 都是 ALL，选择所有数据
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER";	// 不选择 PASSWORD 列
+			else	// 如果 key 为 ALL，value 不是 ALL，多条件查询。MNAME 列使用 like 模糊查询
 				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME LIKE '%"
 						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "'";
-		} else {
+		} else {	// 生成 sql 语句，查询指定的属性列
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
 				sql += attrs[i] + ", ";

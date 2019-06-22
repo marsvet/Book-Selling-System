@@ -60,7 +60,7 @@ public class Book_modify extends HttpServlet {
 		PublisherDao publisherDao = new PublisherDao();
 		PurchaseRecordDao purchaseRecordDao = new PurchaseRecordDao();
 
-		if ("1".equals(option) || "2".equals(option)) {
+		if ("1".equals(option) || "2".equals(option)) {		// option 为 1 或 2 时，运行 进退货 功能
 			int quantity = Integer.valueOf(request.getParameter("quantity"));
 
 			String booksJsonString = null;
@@ -71,8 +71,8 @@ public class Book_modify extends HttpServlet {
 				writer.close();
 				return;
 			}
-			JSONArray booksJsonArray = new JSONArray(booksJsonString);
-			JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
+			JSONArray booksJsonArray = new JSONArray(booksJsonString);	// 将 json 字符串转化为 json 数组对象
+			JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);	// 提取 json 数组中的第一个 json 对象
 			int inventory = Integer.valueOf(booksJsonObject.getString("INVENTORY"));
 			float retail_price = Float.valueOf(booksJsonObject.getString("RETAIL_PRICE"));
 
@@ -91,6 +91,7 @@ public class Book_modify extends HttpServlet {
 			String publisher_id = publisherJsonObject.getString("PID");
 
 			try {
+				// 将数据库 books 表的 inventory 列更新为 inventory + quantity，quantity 为正数或负数，所以正数相当于进货，负数相当于退货
 				booksDao.update_books(new String[] { "INVENTORY" },
 						new String[] { String.valueOf(inventory + quantity) }, "ISBN", ISBN);
 				publisherDao.update_publisher(new String[] { "BOOKS_NUM" },

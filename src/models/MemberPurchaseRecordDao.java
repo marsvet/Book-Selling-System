@@ -34,7 +34,7 @@ public class MemberPurchaseRecordDao {
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
-				if ("DATE_OF_SALE".equals(columnName))
+				if ("DATE_OF_SALE".equals(columnName))		// 本系统的日期只精确到“日”，所以这里去掉“时分秒”
 					jsonObject.put(columnName, columnValue.substring(0, 10));
 				else
 					jsonObject.put(columnName, columnValue);

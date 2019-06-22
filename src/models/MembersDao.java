@@ -27,7 +27,7 @@ public class MembersDao {
 			else
 				sql = "SELECT MEMBERS.MNAME MNAME, PHONE_NUMBER, IDENTIFICATION_NUMBER, MEMBERS_GROUP.MNAME MGNAME, BOOK_PURCHASE, BALANCE, STATUS FROM MEMBERS, MEMBERS_GROUP WHERE MEMBERS.MEMBERS_GROUP_ID=MEMBERS_GROUP.MID AND (MEMBERS.MNAME LIKE '%"
 						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "')";
-			// MERBERS.MNAME 列使用 LIKE 进行模糊查询
+				// MERBERS.MNAME 列使用 LIKE 进行模糊查询
 
 		} else {
 			sql = "SELECT ";
@@ -63,6 +63,7 @@ public class MembersDao {
 		return jsonArray.toString();
 	}
 
+	/* 调用存储过程插入会员 */
 	public boolean insert_into_members(String mname, String identification_number, String phone_number,
 			String members_group) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");

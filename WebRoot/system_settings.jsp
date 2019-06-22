@@ -1,15 +1,52 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"
+	import="java.util.*, models.ManagerDao, org.json.JSONArray, org.json.JSONObject"
+	pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
+<%
+	int requiredPermission = 2; // 该页面需要的权限等级
+
+	String mname = null;
+	String passwd = null;
+	Cookie[] cookies = request.getCookies(); // 获取 cookies
+	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
+		if ("mname".equals(cookies[i].getName()))
+			mname = cookies[i].getValue();
+		if ("passwd".equals(cookies[i].getName()))
+			passwd = cookies[i].getValue();
+	}
+
+	// 如果 mname 和 passwd 都存在，验证用户名和密码，并查找该用户名对应的权限
+	if (mname != null && passwd != null) {
+		ManagerDao managerDao = new ManagerDao();
+
+		String managerJsonString = managerDao.search_manager(new String[]{"PERMISSION", "PASSWD"}, "MNAME",
+				mname);
+		JSONArray managerJsonArray = new JSONArray(managerJsonString);
+		if (managerJsonArray.length() != 1) {		// 如果找不到该用户名，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+		JSONObject managerJsonObject = managerJsonArray.getJSONObject(0);
+		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) {	// 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+		
+		int permission = Integer.valueOf(managerJsonObject.getString("PERMISSION"));
+		if (permission < requiredPermission) // 如果该用户名对应的权限小于此页面需要的权限，将请求转发到 permission_denied.jsp 页面以显示错误信息
+			request.getRequestDispatcher("permission_denied.jsp").forward(request, response);
+	} else // 如果没有指定 cookie，重定向页面到 index.jsp
+		response.sendRedirect("index.jsp");
+%>
 
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8
-" />
+<meta charset="UTF-8" />
 <title>图书销售系统 | 系统设置</title>
 <link rel="stylesheet" href="css/style.css" />
 <style>
@@ -378,7 +415,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oInput.value;
 					} else {
@@ -440,7 +477,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.style.display = "none";
 					} else {
@@ -462,8 +499,7 @@
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"
 			placeholder="输入姓名、电话 或 身份证号" />
@@ -524,19 +560,16 @@
 		</div>
 		<div class="alert-window" id="delete">
 			<p>
-				<img src="images/alert.png">
-				确定删除该管理员吗
+				<img src="images/alert.png"> 确定删除该管理员吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<img src="images/completed.png">
-			<span></span>
+			<img src="images/completed.png"> <span></span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png">
-			<span></span>
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

@@ -116,9 +116,10 @@ p#error {
 
 		xmlHttpRequest.onreadystatechange = function() {
 			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-				if (xmlHttpRequest.responseText == "true") {
+				if (xmlHttpRequest.responseText == "1") {
+					document.cookie = "mname=" + mname;
+					document.cookie = "passwd=" + passwd;
 					window.location.href = "books_sale.jsp";
-					return;
 				} else {
 					var oError = document.getElementById("error");
 					oError.style.display = "block";
@@ -131,8 +132,7 @@ p#error {
 <body>
 	<div>
 		<header>
-			<img src="images/logo-fill.png">
-			图书销售系统
+			<img src="images/logo-fill.png"> 图书销售系统
 		</header>
 		<main>
 			<h1>管理员登录</h1>

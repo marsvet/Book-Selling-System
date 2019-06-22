@@ -46,25 +46,23 @@ public class Check_admin extends HttpServlet {
 		response.setCharacterEncoding("utf-8"); // 设置响应的编码
 		response.setContentType("text/html"); // 设置响应的 Content-Type
 
-		PrintWriter writer = response.getWriter();	// 实例化输出流对象，通过输出流对象将内容传到前端
+		PrintWriter writer = response.getWriter(); // 实例化输出流对象，通过输出流对象将内容传到前端
 
 		String mname = request.getParameter("mname");
 		String passwd = request.getParameter("passwd");
 		CheckAdminDao checkAdminDao = new CheckAdminDao();
-		
+
 		int count = 0;
 		try {
 			count = checkAdminDao.check_admin(mname, passwd);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		
-		if (count > 0) {
-			writer.write("true");
-		}
-		else {
-			writer.write("false");
-		}
+
+		if (count > 0)
+			writer.write("1");
+		else
+			writer.write("0");
 
 		writer.close();
 	}

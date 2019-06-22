@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MembersDao;
 
 /**
  * Servlet implementation class Member_insert
@@ -52,10 +52,10 @@ public class Member_insert extends HttpServlet {
 		String members_group = request.getParameter("members_group");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		MembersDao membersDao = new MembersDao();
 
 		try {
-			jdbcDao.insert_into_members(mname, identification_number, phone_number, members_group);
+			membersDao.insert_into_members(mname, identification_number, phone_number, members_group);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

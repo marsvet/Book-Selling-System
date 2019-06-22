@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.BooksDao;
+import models.MemberGroupDao;
+import models.MembersDao;
+import models.SalesRecordDao;
 
 /**
  * Servlet implementation class Book_sale
@@ -53,11 +56,14 @@ public class Book_sale extends HttpServlet {
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		BooksDao booksDao = new BooksDao();
+		MembersDao membersDao = new MembersDao();
+		MemberGroupDao memberGroupDao = new MemberGroupDao();
+		SalesRecordDao salesRecordDao = new SalesRecordDao();
 
 		String booksJsonString = null;
 		try {
-			booksJsonString = jdbcDao.search_books(new String[] { "TITLE", "AUTHOR", "INVENTORY", "RETAIL_PRICE" },
+			booksJsonString = booksDao.search_books(new String[] { "TITLE", "AUTHOR", "INVENTORY", "RETAIL_PRICE" },
 					"ISBN", ISBN);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -67,7 +73,7 @@ public class Book_sale extends HttpServlet {
 
 		String membersJsonString = null;
 		try {
-			membersJsonString = jdbcDao.search_members(new String[]{"MEMBERS.MID MID", "BOOK_PURCHASE", "STATUS", "MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE"}, "PHONE_NUMBER", phone_number);
+			membersJsonString = membersDao.search_members(new String[]{"MEMBERS.MID MID", "BOOK_PURCHASE", "STATUS", "MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE"}, "PHONE_NUMBER", phone_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -87,7 +93,7 @@ public class Book_sale extends HttpServlet {
 		String mgname = membersJsonObject.getString("MGNAME");
 		String membersGroupJsonString = null;
 		try {
-			membersGroupJsonString = jdbcDao.search_members_group(new String[] { "DISCOUNT" }, "MNAME", mgname);
+			membersGroupJsonString = memberGroupDao.search_members_group(new String[] { "DISCOUNT" }, "MNAME", mgname);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -117,13 +123,13 @@ public class Book_sale extends HttpServlet {
 		}
 
 		try {
-			jdbcDao.update_books(new String[] { "INVENTORY" }, new String[] { String.valueOf(inventory - quantity) },
+			booksDao.update_books(new String[] { "INVENTORY" }, new String[] { String.valueOf(inventory - quantity) },
 					"ISBN", ISBN);
 		} catch (ClassNotFoundException | SQLException e1) {
 			e1.printStackTrace();
 		}
 		try {
-			jdbcDao.update_members(new String[] { "BOOK_PURCHASE", "BALANCE" },
+			membersDao.update_members(new String[] { "BOOK_PURCHASE", "BALANCE" },
 					new String[] { String.valueOf(book_purchase + quantity),
 							String.valueOf(balance - retail_price * discount * quantity / 10) },
 					"PHONE_NUMBER", phone_number);
@@ -131,14 +137,14 @@ public class Book_sale extends HttpServlet {
 			e1.printStackTrace();
 		}
 		try {
-			jdbcDao.insert_into_sales_record(ISBN, retail_price * discount / 10, memberId, quantity);
+			salesRecordDao.insert_into_sales_record(ISBN, retail_price * discount / 10, memberId, quantity);
 		} catch (ClassNotFoundException | SQLException e1) {
 			e1.printStackTrace();
 		}
 		
 		String salesRecordJsonString = null;
 		try {
-			salesRecordJsonString = jdbcDao.search_sales_record(null, "MAX(SERIAL_NUMBER)", null);
+			salesRecordJsonString = salesRecordDao.search_sales_record(null, "MAX(SERIAL_NUMBER)", null);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -146,7 +152,7 @@ public class Book_sale extends HttpServlet {
 		JSONObject salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
 		String serial_number = salesRecordJsonObject.getString("SERIAL_NUMBER");
 		try {
-			salesRecordJsonString = jdbcDao.search_sales_record(new String[]{"DATE_OF_SALE"}, "SERIAL_NUMBER", serial_number);
+			salesRecordJsonString = salesRecordDao.search_sales_record(new String[]{"DATE_OF_SALE"}, "SERIAL_NUMBER", serial_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

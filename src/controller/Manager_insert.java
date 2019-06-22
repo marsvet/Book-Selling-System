@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.ManagerDao;
 
 /**
  * Servlet implementation class Manager_insert
@@ -53,10 +53,10 @@ public class Manager_insert extends HttpServlet {
 		String passwd = request.getParameter("password");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		ManagerDao managerDao = new ManagerDao();
 
 		try {
-			jdbcDao.insert_into_manager(mname, passwd, permission, identification_number, phone_number);
+			managerDao.insert_into_manager(mname, passwd, permission, identification_number, phone_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

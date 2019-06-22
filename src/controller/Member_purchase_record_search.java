@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MemberPurchaseRecordDao;
 
 /**
  * Servlet implementation class Member_purchase_record_search
@@ -49,9 +49,10 @@ public class Member_purchase_record_search extends HttpServlet {
 		String phone_number = request.getParameter("phone_number");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		MemberPurchaseRecordDao memberPurchaseRecordDao = new MemberPurchaseRecordDao();
+		
 		try {
-			jsonString = jdbcDao.search_member_purchase_record(phone_number);
+			jsonString = memberPurchaseRecordDao.search_member_purchase_record(phone_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

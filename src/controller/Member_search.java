@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MembersDao;
 
 /**
  * Servlet implementation class Member_search
@@ -49,9 +49,10 @@ public class Member_search extends HttpServlet {
 		String value = request.getParameter("value");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		MembersDao membersDao = new MembersDao();
+		
 		try {
-			jsonString = jdbcDao.search_members(null, "ALL", value);
+			jsonString = membersDao.search_members(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.ManagerDao;
 
 /**
  * Servlet implementation class Member_delete
@@ -49,10 +49,10 @@ public class Manager_delete extends HttpServlet {
 		String phone_number = request.getParameter("phone_number");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		ManagerDao managerDao = new ManagerDao();
 
 		try {
-			jdbcDao.delete_from_manager(phone_number);
+			managerDao.delete_from_manager(phone_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

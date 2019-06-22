@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.PublisherDao;
 
 /**
  * Servlet implementation class Publisher_modify
@@ -51,10 +51,10 @@ public class Publisher_modify extends HttpServlet {
 		String plocation = request.getParameter("plocation");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		PublisherDao publisherDao = new PublisherDao();
 
 		try {
-			jdbcDao.update_publisher(new String[] { "PNAME", "PLOCATION" },
+			publisherDao.update_publisher(new String[] { "PNAME", "PLOCATION" },
 					new String[] { new_pname, plocation }, "PNAME", pname);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");

@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MembersDao;
+import models.PurchaseRecordDao;
+import models.SalesRecordDao;
 
 /**
  * Servlet implementation class Get_record
@@ -49,19 +51,21 @@ public class Get_reports extends HttpServlet {
 		String option = request.getParameter("option");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		MembersDao membersDao = new MembersDao();
+		SalesRecordDao salesRecordDao = new SalesRecordDao();
+		PurchaseRecordDao purchaseRecordDao = new PurchaseRecordDao();
 
 		String jsonString = null;
 		try {
 			switch (option) {
 			case "0":
-				jsonString = jdbcDao.search_sales_record(null, "ALL", "ALL");
+				jsonString = salesRecordDao.search_sales_record(null, "ALL", "ALL");
 				break;
 			case "1":
-				jsonString = jdbcDao.search_purchase_record(null, "ALL", "ALL");
+				jsonString = purchaseRecordDao.search_purchase_record(null, "ALL", "ALL");
 				break;
 			case "2":
-				jsonString = jdbcDao.search_members(null, "ALL", "ALL");
+				jsonString = membersDao.search_members(null, "ALL", "ALL");
 				break;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

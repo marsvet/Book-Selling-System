@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.CheckAdminDao;
 
 /**
  * Servlet implementation class Check_admin
@@ -50,10 +50,11 @@ public class Check_admin extends HttpServlet {
 
 		String mname = request.getParameter("mname");
 		String passwd = request.getParameter("passwd");
-		JDBCDao jdbcdao = new JDBCDao();
+		CheckAdminDao checkAdminDao = new CheckAdminDao();
+		
 		int count = 0;
 		try {
-			count = jdbcdao.check_admin(mname, passwd);
+			count = checkAdminDao.check_admin(mname, passwd);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

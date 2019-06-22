@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MemberGroupDao;
 
 /**
  * Servlet implementation class Members_group_delete
@@ -49,10 +49,10 @@ public class Members_group_delete extends HttpServlet {
 		String mgname = request.getParameter("mgname");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		MemberGroupDao memberGroupDao = new MemberGroupDao();
 
 		try {
-			jdbcDao.delete_from_members_group(mgname);
+			memberGroupDao.delete_from_members_group(mgname);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

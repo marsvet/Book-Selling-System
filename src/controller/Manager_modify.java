@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.ManagerDao;
 
 /**
  * Servlet implementation class Manager_modify
@@ -50,7 +50,7 @@ public class Manager_modify extends HttpServlet {
 		String phone_number = request.getParameter("phone_number");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		ManagerDao managerDao = new ManagerDao();
 
 		switch (option) {
 		case "1":
@@ -58,7 +58,7 @@ public class Manager_modify extends HttpServlet {
 			String new_phone_number = request.getParameter("new_phone_number");
 			String identification = request.getParameter("identification");
 			try {
-				jdbcDao.update_manager(new String[] { "MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER" },
+				managerDao.update_manager(new String[] { "MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER" },
 						new String[] { mname, new_phone_number, identification }, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
@@ -69,7 +69,7 @@ public class Manager_modify extends HttpServlet {
 		case "2":
 			String password = request.getParameter("password");
 			try {
-				jdbcDao.update_manager(new String[] { "PASSWD" }, new String[] { password }, "PHONE_NUMBER",
+				managerDao.update_manager(new String[] { "PASSWD" }, new String[] { password }, "PHONE_NUMBER",
 						phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
@@ -80,7 +80,7 @@ public class Manager_modify extends HttpServlet {
 		case "3":
 			String permission = request.getParameter("permission");
 			try {
-				jdbcDao.update_manager(new String[] { "PERMISSION" }, new String[] { permission }, "PHONE_NUMBER",
+				managerDao.update_manager(new String[] { "PERMISSION" }, new String[] { permission }, "PHONE_NUMBER",
 						phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");

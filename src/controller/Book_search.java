@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.BooksDao;
 
 /**
  * Servlet implementation class Book_search
@@ -49,9 +49,10 @@ public class Book_search extends HttpServlet {
 		String value = request.getParameter("value");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		BooksDao booksDao = new BooksDao();
+		
 		try {
-			jsonString = jdbcDao.search_books(null, "ALL", value);
+			jsonString = booksDao.search_books(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

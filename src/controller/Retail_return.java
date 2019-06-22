@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.BooksDao;
+import models.MembersDao;
+import models.SalesRecordDao;
 
 /**
  * Servlet implementation class Book_sale
@@ -52,11 +54,13 @@ public class Retail_return extends HttpServlet {
 		String memberName = request.getParameter("mname");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		BooksDao booksDao = new BooksDao();
+		MembersDao membersDao = new MembersDao();
+		SalesRecordDao salesRecordDao = new SalesRecordDao();
 
 		String salesRecordJsonString = null;
 		try {
-			salesRecordJsonString = jdbcDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID" },
+			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID" },
 					"SERIAL_NUMBER", serial_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -71,7 +75,7 @@ public class Retail_return extends HttpServlet {
 
 		String membersJsonString = null;
 		try {
-			membersJsonString = jdbcDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
+			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
 					memberName);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -95,7 +99,7 @@ public class Retail_return extends HttpServlet {
 		String ISBN = salesRecordJsonObject.getString("ISBN");
 		String booksJsonString = null;
 		try {
-			booksJsonString = jdbcDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN);
+			booksJsonString = booksDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -109,14 +113,14 @@ public class Retail_return extends HttpServlet {
 		float balance = Float.valueOf(membersJsonObject.getString("BALANCE"));
 
 		try {
-			jdbcDao.update_books(new String[] { "INVENTORY" }, new String[] { String.valueOf(inventory + quantity) },
+			booksDao.update_books(new String[] { "INVENTORY" }, new String[] { String.valueOf(inventory + quantity) },
 					"ISBN", ISBN);
 		} catch (ClassNotFoundException | SQLException e1) {
 			e1.printStackTrace();
 		}
 
 		try {
-			jdbcDao.update_members(new String[] { "BOOK_PURCHASE", "BALANCE" }, new String[] {
+			membersDao.update_members(new String[] { "BOOK_PURCHASE", "BALANCE" }, new String[] {
 					String.valueOf(book_purchase - quantity), String.valueOf(balance + retail_price * quantity) },
 					"MNAME", memberName);
 		} catch (ClassNotFoundException | SQLException e1) {
@@ -124,7 +128,7 @@ public class Retail_return extends HttpServlet {
 		}
 
 		try {
-			jdbcDao.sales_record_transform_to_invalid(serial_number);
+			salesRecordDao.sales_record_transform_to_invalid(serial_number);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import models.JDBCDao;
+import models.MembersDao;
 
 /**
  * Servlet implementation class Member_modify
@@ -53,7 +53,7 @@ public class Member_modify extends HttpServlet {
 		String phone_number = request.getParameter("phone_number");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		MembersDao membersDao = new MembersDao();
 		
 		switch(option) {
 		case "1":
@@ -61,7 +61,7 @@ public class Member_modify extends HttpServlet {
 			String new_phone_number = request.getParameter("new_phone_number");
 			String identification = request.getParameter("identification");
 			try {
-				jdbcDao.update_members(new String[] {"MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER"}, new String[] {mname, new_phone_number, identification}, "PHONE_NUMBER", phone_number);
+				membersDao.update_members(new String[] {"MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER"}, new String[] {mname, new_phone_number, identification}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -71,7 +71,7 @@ public class Member_modify extends HttpServlet {
 		case "2":
 			String membersJsonString = null;
 			try {
-				membersJsonString = jdbcDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number);
+				membersJsonString = membersDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -82,7 +82,7 @@ public class Member_modify extends HttpServlet {
 			float balance = Float.valueOf(membersJsonObject.getString("BALANCE"));
 			float recharge_amount = Float.valueOf(request.getParameter("recharge_amount"));
 			try {
-				jdbcDao.update_members(new String[] {"BALANCE"}, new String[] {String.valueOf(balance + recharge_amount)}, "PHONE_NUMBER", phone_number);
+				membersDao.update_members(new String[] {"BALANCE"}, new String[] {String.valueOf(balance + recharge_amount)}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -91,7 +91,7 @@ public class Member_modify extends HttpServlet {
 			break;
 		case "3":
 			try {
-				jdbcDao.update_members(new String[] {"STATUS"}, new String[] {"0"}, "PHONE_NUMBER", phone_number);
+				membersDao.update_members(new String[] {"STATUS"}, new String[] {"0"}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -100,7 +100,7 @@ public class Member_modify extends HttpServlet {
 			break;
 		case "4":
 			try {
-				jdbcDao.update_members(new String[] {"STATUS"}, new String[] {"1"}, "PHONE_NUMBER", phone_number);
+				membersDao.update_members(new String[] {"STATUS"}, new String[] {"1"}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();

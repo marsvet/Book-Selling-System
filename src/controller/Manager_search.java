@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.ManagerDao;
 
 /**
  * Servlet implementation class Manager_search
@@ -49,9 +49,10 @@ public class Manager_search extends HttpServlet {
 		String value = request.getParameter("value");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		ManagerDao managerDao = new ManagerDao();
+		
 		try {
-			jsonString = jdbcDao.search_manager(null, "ALL", value);
+			jsonString = managerDao.search_manager(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

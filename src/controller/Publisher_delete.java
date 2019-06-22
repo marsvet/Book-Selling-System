@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.PublisherDao;
 
 /**
  * Servlet implementation class Publisher_delete
@@ -49,10 +49,10 @@ public class Publisher_delete extends HttpServlet {
 		String pname = request.getParameter("pname");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		PublisherDao publisherDao = new PublisherDao();
 
 		try {
-			jdbcDao.delete_from_publisher(pname);
+			publisherDao.delete_from_publisher(pname);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");
 			writer.close();

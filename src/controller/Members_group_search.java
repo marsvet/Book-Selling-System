@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MemberGroupDao;
 
 /**
  * Servlet implementation class Members_group_search
@@ -49,9 +49,10 @@ public class Members_group_search extends HttpServlet {
 		String value = request.getParameter("value");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		MemberGroupDao memberGroupDao = new MemberGroupDao();
+		
 		try {
-			jsonString = jdbcDao.search_members_group(null, "ALL", value);
+			jsonString = memberGroupDao.search_members_group(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.MemberGroupDao;
 
 /**
  * Servlet implementation class Members_group_modify
@@ -51,7 +51,7 @@ public class Members_group_modify extends HttpServlet {
 		String discount = request.getParameter("discount");
 
 		PrintWriter writer = response.getWriter();
-		JDBCDao jdbcDao = new JDBCDao();
+		MemberGroupDao memberGroupDao = new MemberGroupDao();
 
 		if (Float.valueOf(discount) < 1 || Float.valueOf(discount) > 10) {
 			writer.write("0");
@@ -60,7 +60,7 @@ public class Members_group_modify extends HttpServlet {
 		}
 		
 		try {
-			jdbcDao.update_members_group(new String[] { "MNAME", "DISCOUNT" }, new String[] { new_mpname, discount },
+			memberGroupDao.update_members_group(new String[] { "MNAME", "DISCOUNT" }, new String[] { new_mpname, discount },
 					"MNAME", mpname);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");

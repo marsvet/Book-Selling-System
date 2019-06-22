@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.JDBCDao;
+import models.PublisherDao;
 
 /**
  * Servlet implementation class Publisher_search
@@ -49,9 +49,10 @@ public class Publisher_search extends HttpServlet {
 		String value = request.getParameter("value");
 
 		String jsonString = null;
-		JDBCDao jdbcDao = new JDBCDao();
+		PublisherDao publisherDao = new PublisherDao();
+		
 		try {
-			jsonString = jdbcDao.search_publisher(null, "ALL", value);
+			jsonString = publisherDao.search_publisher(null, "ALL", value);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

@@ -16,20 +16,32 @@ public class BooksDao {
 	private final String USERNAME = "bookselling"; // 用户名
 	private final String PASSWORD = "bookselling"; // 密码
 
-	public String search_books(String[] attrs, String key, String value) throws ClassNotFoundException, SQLException {
+	public String search_books(String[] attrs, String key, String value, int page) throws ClassNotFoundException, SQLException {
 		Class.forName("oracle.jdbc.OracleDriver");	// 导入数据库驱动
 
 		String sql = null;
+		String getCountSql = null;
 
 		// key 有两种可能的值："ALL", "ISBN"
 		if ("ALL".equals(key)) // 如果 key 的值为 "ALL"，将 sql 定义为两种特殊情况
 		{
+			// 使用 MINUS 分页查询
 			if ("ALL".equals(value)) // 特殊情况一：value 为 "ALL" 时，sql 为查询所有书籍
-				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID";
+			{
+					sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*(" + page + "-1)";
+					getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID";
+			}
 			else // 特殊情况二：value 不为 "ALL" 时，sql 为一个多条件查询
+			{	
 				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
 						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
-						+ value + "%')"; // TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
+						+ value + "%') AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
+						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
+						+ value + "%') AND ROWNUM<=10*(" + page + "-1)"; // TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
+				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
+						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
+						+ value + "%')";
+			}
 		} else { // 如果 key 的值为 "ISBN"，则以 ISBN 为查询条件查询指定的属性列
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -48,13 +60,21 @@ public class BooksDao {
 
 		while (rs.next()) { // 提取结果集中的数据
 			JSONObject jsonObject = new JSONObject(); // json 对象
-			for (int i = 1; i <= metaData.getColumnCount(); i++) { // 提取数据并放入
-																	// json 对象
+			for (int i = 1; i <= metaData.getColumnCount(); i++) { // 提取数据并放入 json 对象
 				String columnName = metaData.getColumnLabel(i);
 				String columnValue = rs.getString(columnName);
 				jsonObject.put(columnName, columnValue);
 			}
 			jsonArray.put(jsonObject); // 将 json 对象放入 json 数组对象
+		}
+
+		if (getCountSql != null) {
+			rs = stmt.executeQuery(getCountSql);
+			rs.next();			// 将指针定位到结果集的第一行，如果不执行这句，指针指向第一行的上面
+			JSONObject jsonObject = new JSONObject();
+			int page_sum = (int) (Float.valueOf(rs.getString("ITEM_NUMBER")) / 10 + 0.999999);
+			jsonObject.put("PAGE_SUM", page_sum);
+			jsonArray.put(jsonObject);
 		}
 
 		/* 关闭 */

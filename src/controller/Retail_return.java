@@ -61,7 +61,7 @@ public class Retail_return extends HttpServlet {
 		String salesRecordJsonString = null;
 		try {
 			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID" },
-					"SERIAL_NUMBER", serial_number);
+					"SERIAL_NUMBER", serial_number, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -76,7 +76,7 @@ public class Retail_return extends HttpServlet {
 		String membersJsonString = null;
 		try {
 			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
-					memberName);
+					memberName, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class Retail_return extends HttpServlet {
 		String ISBN = salesRecordJsonObject.getString("ISBN");
 		String booksJsonString = null;
 		try {
-			booksJsonString = booksDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN);
+			booksJsonString = booksDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

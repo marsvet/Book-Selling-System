@@ -24,7 +24,7 @@
 		ManagerDao managerDao = new ManagerDao();
 
 		String managerJsonString = managerDao.search_manager(new String[]{"PERMISSION", "PASSWD"}, "MNAME",
-				mname);
+				mname, -1);
 		JSONArray managerJsonArray = new JSONArray(managerJsonString);
 		if (managerJsonArray.length() != 1) {		// 如果找不到该用户名，重定向到 index.jsp
 			response.sendRedirect("index.jsp");
@@ -63,6 +63,10 @@
 </style>
 <script src="js/main.js"></script>
 <script>
+	var page = 1;
+	var pageNumber = 0;
+	var returnFirstPage = true;
+
 	window.onload = function() {
 		search();
 
@@ -70,6 +74,8 @@
 		var selectButton = document.getElementById("select");
 		var oLi = document.querySelectorAll("nav>ul li");
 		var addButton = document.querySelector(".add");
+		var prevPage = document.getElementById("prev-page");
+		var nextPage = document.getElementById("next-page");
 
 		for (var i = 0; i < oLi.length; i++) {
 			oLi[i].onclick = redirect;
@@ -83,6 +89,23 @@
 		};
 
 		addButton.onclick = addManager;
+
+		prevPage.onclick = function() {
+			if (page > 1) {
+				page--;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
+		nextPage.onclick = function() {
+			if (page < pageNumber) {
+				page++;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
 	};
 
 	function search() {
@@ -95,10 +118,12 @@
 			"Content-Type",
 			"application/x-www-form-urlencoded"
 		);
+		if (returnFirstPage)
+			page = 1;
 		if (value)
-			xmlHttpRequest.send("value=" + value);
+			xmlHttpRequest.send("value=" + value + "&page=" + page);
 		else
-			xmlHttpRequest.send("value=ALL");
+			xmlHttpRequest.send("value=ALL&page=" + page);
 
 		xmlHttpRequest.onreadystatechange = function() {
 			if (
@@ -106,10 +131,19 @@
 				xmlHttpRequest.status == 200
 			) {
 				var oUl = document.querySelector("div#result>ul");
+				var oPager = document.querySelector("#pager");
 				var jsonObj = JSON.parse(xmlHttpRequest.responseText);
 
-				oUl.innerHTML = "";
+				pageNumber = jsonObj[jsonObj.length - 1]["PAGE_SUM"];
+				oPager.querySelector("span").innerHTML = page + " / " + pageNumber;
+				jsonObj = jsonObj.slice(0, -1);
 
+				if (Number(pageNumber) > 1) // 如果总页数大于 1，
+					oPager.style.display = "block";
+				else
+					oPager.style.display = "none";
+
+				oUl.innerHTML = "";
 				for (var i = 0; i < jsonObj.length; i++) {
 					var liHTML = '<li><div class="column1"><h1>';
 
@@ -528,6 +562,11 @@
 		<button type="button" class="add">＋ 添加管理员</button>
 		<div id="result">
 			<ul></ul>
+		</div>
+		<div id="pager">
+			<button type="button" id="prev-page">← 上一页</button>
+			<span></span>
+			<button type="button" id="next-page">下一页 →</button>
 		</div>
 	</main>
 	<div id="layer">

@@ -67,7 +67,7 @@ public class Book_insert extends HttpServlet {
 		String publisherJsonString = null;
 		try {
 			publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME",
-					publisher);
+					publisher, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("0");		// sql 语句执行失败，则向前端返回 "0"
 			writer.close();

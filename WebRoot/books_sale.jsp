@@ -31,10 +31,16 @@
 </style>
 <script src="js/main.js"></script>
 <script>
+	var page = 1; // 当前请求的页数
+	var pageNumber = 0; // 总页数
+	var returnFirstPage = true; // 是否将页数置为 1
+
 	window.onload = function() {
 		var searchInput = document.getElementById("search_input");
 		var selectButton = document.getElementById("select");
 		var oLi = document.querySelectorAll("nav>ul li");
+		var prevPage = document.getElementById("prev-page"); // “上一页”按钮
+		var nextPage = document.getElementById("next-page"); // “下一页”按钮
 
 		for (var i = 0; i < oLi.length; i++) {
 			oLi[i].onclick = redirect;
@@ -46,6 +52,23 @@
 				// 判断是否为回车键
 				search();
 		};
+
+		prevPage.onclick = function() {
+			if (page > 1) {
+				page--;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
+		nextPage.onclick = function() {
+			if (page < pageNumber) {
+				page++;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
 	};
 
 	function search() {
@@ -53,6 +76,9 @@
 		var value = searchInput.value;
 
 		if (value) {
+			if (returnFirstPage)
+				page = 1;
+
 			var xmlHttpRequest = new XMLHttpRequest();
 
 			xmlHttpRequest.open("POST", "Book_search", true);
@@ -60,17 +86,26 @@
 				"Content-Type",
 				"application/x-www-form-urlencoded"
 			);
-			xmlHttpRequest.send("value=" + value);
+			xmlHttpRequest.send("value=" + value + "&page=" + page);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
 					var oUl = document.querySelector("div#result>ul");
+					var oPager = document.querySelector("#pager");
 					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
 
-					oUl.innerHTML = "";
+					pageNumber = jsonObj[jsonObj.length - 1]["PAGE_SUM"];
+					oPager.querySelector("span").innerHTML = page + " / " + pageNumber;
+					jsonObj = jsonObj.slice(0, -1);
 
+					if (Number(pageNumber) > 1)		// 如果总页数大于 1，
+						oPager.style.display = "block";
+					else
+						oPager.style.display = "none";
+
+					oUl.innerHTML = "";
 					for (var i = 0; i < jsonObj.length; i++) {
 						var liHTML = '<li><div class="column1"><h1>';
 
@@ -169,8 +204,7 @@
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"
 			placeholder="输入书名、作者、ISBN 或 出版社" />
@@ -198,6 +232,11 @@
 	<main>
 		<div id="result">
 			<ul></ul>
+		</div>
+		<div id="pager">
+			<button type="button" id="prev-page">← 上一页</button>
+			<span></span>
+			<button type="button" id="next-page">下一页 →</button>
 		</div>
 	</main>
 	<div id="layer">

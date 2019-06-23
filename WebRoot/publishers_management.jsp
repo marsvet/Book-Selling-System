@@ -24,18 +24,18 @@
 		ManagerDao managerDao = new ManagerDao();
 
 		String managerJsonString = managerDao.search_manager(new String[]{"PERMISSION", "PASSWD"}, "MNAME",
-				mname);
+				mname, -1);
 		JSONArray managerJsonArray = new JSONArray(managerJsonString);
-		if (managerJsonArray.length() != 1) {		// 如果找不到该用户名，重定向到 index.jsp
+		if (managerJsonArray.length() != 1) { // 如果找不到该用户名，重定向到 index.jsp
 			response.sendRedirect("index.jsp");
 			return;
 		}
 		JSONObject managerJsonObject = managerJsonArray.getJSONObject(0);
-		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) {	// 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
+		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) { // 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
 			response.sendRedirect("index.jsp");
 			return;
 		}
-		
+
 		int permission = Integer.valueOf(managerJsonObject.getString("PERMISSION"));
 		if (permission < requiredPermission) // 如果该用户名对应的权限小于此页面需要的权限，将请求转发到 permission_denied.jsp 页面以显示错误信息
 			request.getRequestDispatcher("permission_denied.jsp").forward(request, response);
@@ -57,13 +57,19 @@
 </style>
 <script src="js/main.js"></script>
 <script>
+	var page = 1;
+	var pageNumber = 0;
+	var returnFirstPage = true;
+
 	window.onload = function() {
-		/* search(); */
+		search();
 
 		var searchInput = document.getElementById("search_input");
 		var selectButton = document.getElementById("select");
 		var oLi = document.querySelectorAll("nav>ul li");
 		var addButton = document.querySelector(".add");
+		var prevPage = document.getElementById("prev-page");
+		var nextPage = document.getElementById("next-page");
 
 		for (var i = 0; i < oLi.length; i++) {
 			oLi[i].onclick = redirect;
@@ -77,48 +83,77 @@
 		};
 
 		addButton.onclick = addPublisher;
+
+		prevPage.onclick = function() {
+			if (page > 1) {
+				page--;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
+		nextPage.onclick = function() {
+			if (page < pageNumber) {
+				page++;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
 	};
 
 	function search() {
 		var searchInput = document.getElementById("search_input");
-
 		var value = searchInput.value;
-		if (value) {
-			var xmlHttpRequest = new XMLHttpRequest();
 
-			xmlHttpRequest.open("POST", "Publisher_search", true);
-			xmlHttpRequest.setRequestHeader(
-				"Content-Type",
-				"application/x-www-form-urlencoded"
-			);
-			xmlHttpRequest.send("value=" + value);
+		var xmlHttpRequest = new XMLHttpRequest();
+		xmlHttpRequest.open("POST", "Publisher_search", true);
+		xmlHttpRequest.setRequestHeader(
+			"Content-Type",
+			"application/x-www-form-urlencoded"
+		);
 
-			xmlHttpRequest.onreadystatechange = function() {
-				if (
-					xmlHttpRequest.readyState == 4 &&
-					xmlHttpRequest.status == 200
-				) {
-					var oUl = document.querySelector("div#result>ul");
-					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
+		if (returnFirstPage)
+			page = 1;
+		if (value)
+			xmlHttpRequest.send("value=" + value + "&page=" + page);
+		else
+			xmlHttpRequest.send("value=ALL&page=" + page);
 
-					oUl.innerHTML = "";
+		xmlHttpRequest.onreadystatechange = function() {
+			if (
+				xmlHttpRequest.readyState == 4 &&
+				xmlHttpRequest.status == 200
+			) {
+				var oUl = document.querySelector("div#result>ul");
+				var oPager = document.querySelector("#pager");
+				var jsonObj = JSON.parse(xmlHttpRequest.responseText);
 
-					for (var i = 0; i < jsonObj.length; i++) {
-						var liHTML = '<li><div class="column1"><h1>';
-						liHTML += jsonObj[i]["PLOCATION"] + "：" + jsonObj[i]["PNAME"] +
-							'</h1></div><div class="column2"><p>从此出版社购书：</p></div><div class="column3"><p>' +
-							jsonObj[i]["BOOKS_NUM"] + '</p></div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
-						oUl.innerHTML += liHTML;
-					}
-					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
-					for (var j = 0; j < modifyInfoButton.length; j++)
-						modifyInfoButton[j].onclick = modifyInfo;
-					var deleteButton = document.getElementsByClassName("delete-button");
-					for (var j = 0; j < deleteButton.length; j++)
-						deleteButton[j].onclick = deletePublisher;
+				pageNumber = jsonObj[jsonObj.length - 1]["PAGE_SUM"];
+				oPager.querySelector("span").innerHTML = page + " / " + pageNumber;
+				jsonObj = jsonObj.slice(0, -1);
+
+				if (Number(pageNumber) > 1) // 如果总页数大于 1，
+					oPager.style.display = "block";
+				else
+					oPager.style.display = "none";
+
+				oUl.innerHTML = "";
+				for (var i = 0; i < jsonObj.length; i++) {
+					var liHTML = '<li><div class="column1"><h1>';
+					liHTML += jsonObj[i]["PLOCATION"] + "：" + jsonObj[i]["PNAME"] +
+						'</h1></div><div class="column2"><p>从此出版社购书：</p></div><div class="column3"><p>' +
+						jsonObj[i]["BOOKS_NUM"] + '</p></div><div class="column4"><button type="button" class="modify-info-button">资料修改</button><button type="button" class="delete-button">删除</button></div></li>';
+					oUl.innerHTML += liHTML;
 				}
-			};
-		}
+				var modifyInfoButton = document.getElementsByClassName("modify-info-button");
+				for (var j = 0; j < modifyInfoButton.length; j++)
+					modifyInfoButton[j].onclick = modifyInfo;
+				var deleteButton = document.getElementsByClassName("delete-button");
+				for (var j = 0; j < deleteButton.length; j++)
+					deleteButton[j].onclick = deletePublisher;
+			}
+		};
 	}
 
 	function addPublisher() {
@@ -231,7 +266,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.querySelector(".column1>h1").innerHTML = oInput[1].value + "：" + oInput[0].value;
 					} else {
@@ -292,7 +327,7 @@
 							successMessage.style.display = "none";
 							layer.style.display = "none";
 						}, 1000);
-						
+
 						/* 前端同步更新 */
 						currentItem.style.display = "none";
 					} else {
@@ -314,8 +349,7 @@
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input"
 			placeholder="输入 出版社名 或 所在地" />
@@ -345,6 +379,11 @@
 		<div id="result">
 			<ul></ul>
 		</div>
+		<div id="pager">
+			<button type="button" id="prev-page">← 上一页</button>
+			<span></span>
+			<button type="button" id="next-page">下一页 →</button>
+		</div>
 	</main>
 	<div id="layer">
 		<div class="form-window" id="add-publisher">
@@ -363,19 +402,16 @@
 		</div>
 		<div class="alert-window" id="delete">
 			<p>
-				<img src="images/alert.png">
-				确定删除该出版社吗
+				<img src="images/alert.png"> 确定删除该出版社吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<img src="images/completed.png">
-			<span></span>
+			<img src="images/completed.png"> <span></span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png">
-			<span></span>
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

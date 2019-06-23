@@ -49,6 +49,7 @@ public class Get_reports extends HttpServlet {
 		response.setContentType("application/json");
 
 		String option = request.getParameter("option");
+		int page = Integer.valueOf(request.getParameter("page"));
 
 		PrintWriter writer = response.getWriter();
 		MembersDao membersDao = new MembersDao();
@@ -58,14 +59,14 @@ public class Get_reports extends HttpServlet {
 		String jsonString = null;
 		try {
 			switch (option) {
-			case "0":
-				jsonString = salesRecordDao.search_sales_record(null, "ALL", "ALL");
-				break;
 			case "1":
-				jsonString = purchaseRecordDao.search_purchase_record(null, "ALL", "ALL");
+				jsonString = salesRecordDao.search_sales_record(null, "ALL", "ALL", page);
 				break;
 			case "2":
-				jsonString = membersDao.search_members(null, "ALL", "ALL");
+				jsonString = purchaseRecordDao.search_purchase_record(null, "ALL", "ALL", page);
+				break;
+			case "3":
+				jsonString = membersDao.search_members(null, "ALL", "ALL", page);
 				break;
 			}
 		} catch (ClassNotFoundException | SQLException e) {

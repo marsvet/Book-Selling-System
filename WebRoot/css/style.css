@@ -180,11 +180,11 @@ div#result li {
 }
 
 #pager {
-	margin-left: 20px;
 	width: 85%;
 	min-width: 700px;
 	margin-top: 30px;
 	text-align: center;
+	margin: 70px 0 150px 20px;
 	display: none;
 }
 

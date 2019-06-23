@@ -65,7 +65,7 @@ public class Book_modify extends HttpServlet {
 
 			String booksJsonString = null;
 			try {
-				booksJsonString = booksDao.search_books(new String[] { "INVENTORY", "RETAIL_PRICE" }, "ISBN", ISBN);
+				booksJsonString = booksDao.search_books(new String[] { "INVENTORY", "RETAIL_PRICE" }, "ISBN", ISBN, -1);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -79,7 +79,7 @@ public class Book_modify extends HttpServlet {
 			String publisherJsonString = null;
 			try {
 				publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME",
-						pname);
+						pname, -1);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();
@@ -111,7 +111,7 @@ public class Book_modify extends HttpServlet {
 
 			String publisherJsonString = null;
 			try {
-				publisherJsonString = publisherDao.search_publisher(new String[] { "PID" }, "PNAME", publisher);
+				publisherJsonString = publisherDao.search_publisher(new String[] { "PID" }, "PNAME", publisher, -1);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();

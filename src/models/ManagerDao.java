@@ -15,18 +15,25 @@ public class ManagerDao {
 	private final String USERNAME = "bookselling"; // 用户名
 	private final String PASSWORD = "bookselling"; // 密码
 
-	public String search_manager(String[] attrs, String key, String value) throws ClassNotFoundException, SQLException {
+	public String search_manager(String[] attrs, String key, String value, int page) throws ClassNotFoundException, SQLException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		String sql = null;
+		String getCountSql = null;
 
 		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "MNAME"
 		{
-			if ("ALL".equals(value))	// 如果 key 和 value 都是 ALL，选择所有数据
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER";	// 不选择 PASSWORD 列
-			else	// 如果 key 为 ALL，value 不是 ALL，多条件查询。MNAME 列使用 like 模糊查询
-				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE MNAME LIKE '%"
+			if ("ALL".equals(value)) {	// 如果 key 和 value 都是 ALL，选择所有数据
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE ROWNUM<=10*" + page + " MINUS SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE ROWNUM<=10*(" + page + "-1)";	// 不选择 PASSWORD 列
+				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM MANAGER";
+			}
+			else {	// 如果 key 为 ALL，value 不是 ALL，多条件查询。MNAME 列使用 like 模糊查询
+				sql = "SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE (MNAME LIKE '%"
+						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "') AND ROWNUM<=10*" + page + " MINUS SELECT MID, MNAME, PERMISSION, IDENTIFICATION_NUMBER, PHONE_NUMBER FROM MANAGER WHERE (MNAME LIKE '%"
+						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "') AND ROWNUM<=10*(" + page + "-1)";
+				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM MANAGER WHERE MNAME LIKE '%"
 						+ value + "%' OR PHONE_NUMBER='" + value + "' OR IDENTIFICATION_NUMBER='" + value + "'";
+			}
 		} else {	// 生成 sql 语句，查询指定的属性列
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -49,6 +56,15 @@ public class ManagerDao {
 				String columnValue = rs.getString(columnName);
 				jsonObject.put(columnName, columnValue);
 			}
+			jsonArray.put(jsonObject);
+		}
+
+		if (getCountSql != null) {
+			rs = stmt.executeQuery(getCountSql);
+			rs.next();			// 将指针定位到结果集的第一行，如果不执行这句，指针指向第一行的上面
+			JSONObject jsonObject = new JSONObject();
+			int page_sum = (int) (Float.valueOf(rs.getString("ITEM_NUMBER")) / 10 + 0.999999);
+			jsonObject.put("PAGE_SUM", page_sum);
 			jsonArray.put(jsonObject);
 		}
 

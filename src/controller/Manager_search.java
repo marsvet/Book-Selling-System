@@ -50,9 +50,10 @@ public class Manager_search extends HttpServlet {
 
 		String jsonString = null;
 		ManagerDao managerDao = new ManagerDao();
+		int page = Integer.valueOf(request.getParameter("page"));
 		
 		try {
-			jsonString = managerDao.search_manager(null, "ALL", value);
+			jsonString = managerDao.search_manager(null, "ALL", value, page);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

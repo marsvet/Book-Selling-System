@@ -15,19 +15,26 @@ public class PublisherDao {
 	private final String USERNAME = "bookselling"; // 用户名
 	private final String PASSWORD = "bookselling"; // 密码
 
-	public String search_publisher(String[] attrs, String key, String value)
+	public String search_publisher(String[] attrs, String key, String value, int page)
 			throws ClassNotFoundException, SQLException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		String sql = null;
+		String getCountSql = null;
 
 		if ("ALL".equals(key)) // key 有两种可能的值："ALL", "PNAME"
 		{
-			if ("ALL".equals(value))
-				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER";
-			else
-				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE PNAME LIKE '%" + value
+			if ("ALL".equals(value)) {
+				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE ROWNUM<=10*" + page + " MINUS SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE ROWNUM<=10*(" + page + "-1)";
+				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM PUBLISHER";
+			}
+			else {
+				sql = "SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE (PNAME LIKE '%" + value
+						+ "%' OR PLOCATION='" + value + "') AND ROWNUM<=10*" + page + " MINUS SELECT PNAME, PLOCATION, BOOKS_NUM FROM PUBLISHER WHERE (PNAME LIKE '%" + value
+						+ "%' OR PLOCATION='" + value + "') AND ROWNUM<=10*(" + page + "-1)";
+				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM PUBLISHER WHERE PNAME LIKE '%" + value
 						+ "%' OR PLOCATION='" + value + "'";
+			}
 		} else {
 			sql = "SELECT ";
 			for (int i = 0; i < attrs.length - 1; i++)
@@ -50,6 +57,15 @@ public class PublisherDao {
 				String columnValue = rs.getString(columnName);
 				jsonObject.put(columnName, columnValue);
 			}
+			jsonArray.put(jsonObject);
+		}
+
+		if (getCountSql != null) {
+			rs = stmt.executeQuery(getCountSql);
+			rs.next();			// 将指针定位到结果集的第一行，如果不执行这句，指针指向第一行的上面
+			JSONObject jsonObject = new JSONObject();
+			int page_sum = (int) (Float.valueOf(rs.getString("ITEM_NUMBER")) / 10 + 0.999999);
+			jsonObject.put("PAGE_SUM", page_sum);
 			jsonArray.put(jsonObject);
 		}
 

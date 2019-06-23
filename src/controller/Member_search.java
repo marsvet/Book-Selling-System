@@ -50,9 +50,10 @@ public class Member_search extends HttpServlet {
 
 		String jsonString = null;
 		MembersDao membersDao = new MembersDao();
+		int page = Integer.valueOf(request.getParameter("page"));
 		
 		try {
-			jsonString = membersDao.search_members(null, "ALL", value);
+			jsonString = membersDao.search_members(null, "ALL", value, page);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

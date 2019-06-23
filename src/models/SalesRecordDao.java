@@ -16,14 +16,17 @@ public class SalesRecordDao {
 	private final String USERNAME = "bookselling"; // 用户名
 	private final String PASSWORD = "bookselling"; // 密码
 
-	public String search_sales_record(String[] attrs, String key, String value)
+	public String search_sales_record(String[] attrs, String key, String value, int page)
 			throws ClassNotFoundException, SQLException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		String sql = null;
+		String getCountSql = null;
 
-		if ("ALL".equals(key) && "ALL".equals(value))	// 如果 key 和 value 都是 ALL，选择所有记录
-			sql = "SELECT * FROM SALES_RECORD ORDER BY SERIAL_NUMBER DESC";
+		if ("ALL".equals(key) && "ALL".equals(value)) {	// 如果 key 和 value 都是 ALL，选择所有记录
+			sql = "SELECT * FROM (SELECT * FROM (SELECT * FROM SALES_RECORD ORDER BY SERIAL_NUMBER DESC) WHERE ROWNUM<=10*" + page + " MINUS SELECT * FROM (SELECT * FROM SALES_RECORD ORDER BY SERIAL_NUMBER DESC) WHERE ROWNUM<=10*(" + page + "-1)) ORDER BY SERIAL_NUMBER DESC";
+			getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM SALES_RECORD";
+		}
 		else if ("MAX(SERIAL_NUMBER)".equals(key))		// 如果 key 是 MAX(SERIAL_NUMBER)，选择 MAX(SERIAL_NUMBER)
 			sql = "SELECT MAX(SERIAL_NUMBER) SERIAL_NUMBER FROM SALES_RECORD";
 		else {
@@ -51,6 +54,15 @@ public class SalesRecordDao {
 				else
 					jsonObject.put(columnName, columnValue);
 			}
+			jsonArray.put(jsonObject);
+		}
+
+		if (getCountSql != null) {
+			rs = stmt.executeQuery(getCountSql);
+			rs.next();			// 将指针定位到结果集的第一行，如果不执行这句，指针指向第一行的上面
+			JSONObject jsonObject = new JSONObject();
+			int page_sum = (int) (Float.valueOf(rs.getString("ITEM_NUMBER")) / 10 + 0.999999);
+			jsonObject.put("PAGE_SUM", page_sum);
 			jsonArray.put(jsonObject);
 		}
 

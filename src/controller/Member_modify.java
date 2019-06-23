@@ -71,7 +71,7 @@ public class Member_modify extends HttpServlet {
 		case "2":
 			String membersJsonString = null;
 			try {
-				membersJsonString = membersDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number);
+				membersJsonString = membersDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number, -1);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("0");
 				writer.close();

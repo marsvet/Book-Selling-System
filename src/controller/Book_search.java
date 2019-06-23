@@ -47,12 +47,13 @@ public class Book_search extends HttpServlet {
 		response.setContentType("application/json");
 
 		String value = request.getParameter("value");
+		int page = Integer.valueOf(request.getParameter("page"));
 
 		String jsonString = null;
 		BooksDao booksDao = new BooksDao();
-		
+
 		try {
-			jsonString = booksDao.search_books(null, "ALL", value);
+			jsonString = booksDao.search_books(null, "ALL", value, page);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

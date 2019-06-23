@@ -47,12 +47,13 @@ public class Publisher_search extends HttpServlet {
 		response.setContentType("application/json");
 
 		String value = request.getParameter("value");
+		int page = Integer.valueOf(request.getParameter("page"));
 
 		String jsonString = null;
 		PublisherDao publisherDao = new PublisherDao();
 		
 		try {
-			jsonString = publisherDao.search_publisher(null, "ALL", value);
+			jsonString = publisherDao.search_publisher(null, "ALL", value, page);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

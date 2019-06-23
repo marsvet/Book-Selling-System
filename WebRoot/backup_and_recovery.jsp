@@ -24,7 +24,7 @@
 		ManagerDao managerDao = new ManagerDao();
 
 		String managerJsonString = managerDao.search_manager(new String[]{"PERMISSION", "PASSWD"}, "MNAME",
-				mname);
+				mname, -1);
 		JSONArray managerJsonArray = new JSONArray(managerJsonString);
 		if (managerJsonArray.length() != 1) {		// 如果找不到该用户名，重定向到 index.jsp
 			response.sendRedirect("index.jsp");

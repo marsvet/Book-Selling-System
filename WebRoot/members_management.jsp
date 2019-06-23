@@ -23,21 +23,29 @@
 	width: 50%;
 }
 
-#record-window .table-window {
+#record-window {
 	position: fixed;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	display: none;
+	background-color: white;
+	border-radius: 9px;
 }
 </style>
 <script src="js/main.js"></script>
 <script>
+	var page = 1;
+	var pageNumber = 0;
+	var returnFirstPage = true;
+
 	window.onload = function() {
 		var searchInput = document.getElementById("search_input");
 		var selectButton = document.getElementById("select");
 		var oLi = document.querySelectorAll("nav>ul li");
 		var addButton = document.querySelector(".add");
+		var prevPage = document.getElementById("prev-page");
+		var nextPage = document.getElementById("next-page");
 
 		for (var i = 0; i < oLi.length; i++) {
 			oLi[i].onclick = redirect;
@@ -51,6 +59,23 @@
 		};
 
 		addButton.onclick = addMember;
+
+		prevPage.onclick = function() {
+			if (page > 1) {
+				page--;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
+		nextPage.onclick = function() {
+			if (page < pageNumber) {
+				page++;
+				returnFirstPage = false;
+				search();
+				returnFirstPage = true;
+			}
+		}
 	};
 
 	function search() {
@@ -58,6 +83,9 @@
 
 		var value = searchInput.value;
 		if (value) {
+			if (returnFirstPage)
+				page = 1;
+
 			var xmlHttpRequest = new XMLHttpRequest();
 
 			xmlHttpRequest.open("POST", "Member_search", true);
@@ -65,7 +93,7 @@
 				"Content-Type",
 				"application/x-www-form-urlencoded"
 			);
-			xmlHttpRequest.send("value=" + value);
+			xmlHttpRequest.send("value=" + value + "&page=" + page);
 
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -73,10 +101,19 @@
 					xmlHttpRequest.status == 200
 				) {
 					var oUl = document.querySelector("div#result>ul");
+					var oPager = document.querySelector("#pager");
 					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
 
-					oUl.innerHTML = "";
+					pageNumber = jsonObj[jsonObj.length - 1]["PAGE_SUM"];
+					oPager.querySelector("span").innerHTML = page + " / " + pageNumber;
+					jsonObj = jsonObj.slice(0, -1);
 
+					if (Number(pageNumber) > 1) // 如果总页数大于 1，
+						oPager.style.display = "block";
+					else
+						oPager.style.display = "none";
+
+					oUl.innerHTML = "";
 					for (var i = 0; i < jsonObj.length; i++) {
 						var liHTML = '<li><div class="column1"><h1>';
 
@@ -511,7 +548,7 @@
 			};
 		}
 	}
-
+	
 	function searchPurchaseRecord() {
 		var currentItem = this.parentElement.parentElement;
 		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
@@ -519,6 +556,7 @@
 
 		var layer = document.getElementById("layer");
 		var failMessage = layer.querySelector(".fail-message");
+		var recordWindow = layer.querySelector("#record-window");
 		var tableWindow = layer.querySelector("#record-window>.table-window");
 
 		var xmlHttpRequest = new XMLHttpRequest();
@@ -549,11 +587,11 @@
 					tableWindow.innerHTML = tableHtml;
 
 					layer.style.display = "block";
-					tableWindow.style.display = "block";
+					recordWindow.style.display = "block";
 
 					layer.onclick = function() {
 						layer.style.display = "none";
-						tableWindow.style.display = "none";
+						recordWindow.style.display = "none";
 					}
 				} else {
 					var oSpan = failMessage.querySelector("span");
@@ -602,6 +640,11 @@
 		<button type="button" class="add">＋ 会员注册</button>
 		<div id="result">
 			<ul></ul>
+		</div>
+		<div id="pager">
+			<button type="button" id="prev-page">← 上一页</button>
+			<span></span>
+			<button type="button" id="next-page">下一页 →</button>
 		</div>
 	</main>
 	<div id="layer">

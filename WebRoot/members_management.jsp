@@ -164,7 +164,12 @@
 							liHTML += "<p>正常</p>";
 						else
 							liHTML += "<p>已挂失</p>";
-						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改会员资料</button><button type="button" class="recharge-button">充值</button><br><button type="button" class="report-loss-button">挂失</button><button type="button" class="release-loss-button">解挂</button><button type="button" class="delete-button">删除</button><br><button type="button" class="purchase-record-button">查看购书记录</button></div></li>';
+						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改资料</button><button type="button" class="recharge-button">充值</button><br><button type="button" class="loss-button">';
+						if (jsonObj[i]["STATUS"] == 1)
+							liHTML += "挂失";
+						else
+							liHTML += "解挂";
+						liHTML += '</button><button type="button" class="delete-button">删除</button><br><button type="button" class="purchase-record-button">查看最近购书记录</button></div></li>';
 
 						oUl.innerHTML += liHTML;
 					}
@@ -174,12 +179,13 @@
 					var rechargeButton = document.getElementsByClassName("recharge-button");
 					for (var j = 0; j < rechargeButton.length; j++)
 						rechargeButton[j].onclick = recharge;
-					var reportLossButton = document.getElementsByClassName("report-loss-button");
-					for (var j = 0; j < reportLossButton.length; j++)
-						reportLossButton[j].onclick = reportLoss;
-					var releaseLossButton = document.getElementsByClassName("release-loss-button");
-					for (var j = 0; j < releaseLossButton.length; j++)
-						releaseLossButton[j].onclick = releaseLoss;
+					var lossButton = document.getElementsByClassName("loss-button");
+					for (var j = 0; j < lossButton.length; j++) {
+						if (lossButton[j].innerHTML == "挂失")
+							lossButton[j].onclick = reportLoss;
+						else
+							lossButton[j].onclick = releaseLoss;
+					}
 					var deleteButton = document.getElementsByClassName("delete-button");
 					for (var j = 0; j < deleteButton.length; j++)
 						deleteButton[j].onclick = deleteMember;
@@ -394,6 +400,7 @@
 	}
 
 	function reportLoss() {
+		var thisButton = this;
 		var currentItem = this.parentElement.parentElement;
 		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
 		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
@@ -429,6 +436,8 @@
 					xmlHttpRequest.status == 200
 				) {
 					if (xmlHttpRequest.responseText == "1") {
+						thisButton.innerHTML = "解挂";
+						thisButton.onclick = releaseLoss;
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "挂失成功";
 						reportLossWindow.style.display = "none";
@@ -456,6 +465,7 @@
 	}
 
 	function releaseLoss() {
+		var thisButton = this;
 		var currentItem = this.parentElement.parentElement;
 		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
 		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
@@ -491,6 +501,8 @@
 					xmlHttpRequest.status == 200
 				) {
 					if (xmlHttpRequest.responseText == "1") {
+						thisButton.innerHTML = "挂失";
+						thisButton.onclick = reportLoss;
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "已解除挂失";
 						releaseLossWindow.style.display = "none";
@@ -578,7 +590,7 @@
 			};
 		}
 	}
-	
+
 	function searchPurchaseRecord() {
 		var currentItem = this.parentElement.parentElement;
 		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;

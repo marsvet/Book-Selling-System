@@ -10,6 +10,12 @@
 	String mname = null;
 	String passwd = null;
 	Cookie[] cookies = request.getCookies(); // 获取 cookies
+
+	if (cookies == null) { // 如果没有 cookies，重定向到 index.jsp
+		response.sendRedirect("index.jsp");
+		return;
+	}
+
 	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
 		if ("mname".equals(cookies[i].getName()))
 			mname = cookies[i].getValue();
@@ -130,7 +136,7 @@
 					oPager.querySelector("span").innerHTML = page + " / " + pageNumber;
 					jsonObj = jsonObj.slice(0, -1);
 
-					if (Number(pageNumber) > 1)		// 如果总页数大于 1，
+					if (Number(pageNumber) > 1) // 如果总页数大于 1，
 						oPager.style.display = "block";
 					else
 						oPager.style.display = "none";

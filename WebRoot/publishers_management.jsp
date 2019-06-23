@@ -12,6 +12,12 @@
 	String mname = null;
 	String passwd = null;
 	Cookie[] cookies = request.getCookies(); // 获取 cookies
+
+	if (cookies == null) { // 如果没有 cookies，重定向到 index.jsp
+		response.sendRedirect("index.jsp");
+		return;
+	}
+
 	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
 		if ("mname".equals(cookies[i].getName()))
 			mname = cookies[i].getValue();

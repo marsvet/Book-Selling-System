@@ -12,6 +12,12 @@
 	String mname = null;
 	String passwd = null;
 	Cookie[] cookies = request.getCookies(); // 获取 cookies
+
+	if (cookies == null) { // 如果没有 cookies，重定向到 index.jsp
+		response.sendRedirect("index.jsp");
+		return;
+	}
+
 	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
 		if ("mname".equals(cookies[i].getName()))
 			mname = cookies[i].getValue();
@@ -26,16 +32,16 @@
 		String managerJsonString = managerDao.search_manager(new String[]{"PERMISSION", "PASSWD"}, "MNAME",
 				mname, -1);
 		JSONArray managerJsonArray = new JSONArray(managerJsonString);
-		if (managerJsonArray.length() != 1) {		// 如果找不到该用户名，重定向到 index.jsp
+		if (managerJsonArray.length() != 1) { // 如果找不到该用户名，重定向到 index.jsp
 			response.sendRedirect("index.jsp");
 			return;
 		}
 		JSONObject managerJsonObject = managerJsonArray.getJSONObject(0);
-		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) {	// 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
+		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) { // 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
 			response.sendRedirect("index.jsp");
 			return;
 		}
-		
+
 		int permission = Integer.valueOf(managerJsonObject.getString("PERMISSION"));
 		if (permission < requiredPermission) // 如果该用户名对应的权限小于此页面需要的权限，将请求转发到 permission_denied.jsp 页面以显示错误信息
 			request.getRequestDispatcher("permission_denied.jsp").forward(request, response);
@@ -300,8 +306,7 @@
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input" disabled />
 		<button type="button" id="select" disabled>查询</button>
@@ -348,19 +353,16 @@
 		</div>
 		<div class="alert-window" id="delete">
 			<p>
-				<img src="images/alert.png">
-				确定删除该会员组吗
+				<img src="images/alert.png"> 确定删除该会员组吗
 			</p>
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<img src="images/completed.png">
-			<span></span>
+			<img src="images/completed.png"> <span></span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png">
-			<span></span>
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

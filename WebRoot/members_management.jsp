@@ -1,8 +1,38 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"
+	import="java.util.*, models.ManagerDao, org.json.JSONArray, org.json.JSONObject"
+	pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+%>
+<%
+	String mname = null;
+	String passwd = null;
+	Cookie[] cookies = request.getCookies(); // 获取 cookies
+	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
+		if ("mname".equals(cookies[i].getName()))
+			mname = cookies[i].getValue();
+		if ("passwd".equals(cookies[i].getName()))
+			passwd = cookies[i].getValue();
+	}
+
+	if (mname != null && passwd != null) {
+		ManagerDao managerDao = new ManagerDao();
+
+		String managerJsonString = managerDao.search_manager(new String[]{"PASSWD"}, "MNAME", mname, -1);
+		JSONArray managerJsonArray = new JSONArray(managerJsonString);
+		if (managerJsonArray.length() != 1) { // 如果找不到该用户名，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+		JSONObject managerJsonObject = managerJsonArray.getJSONObject(0);
+		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) { // 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+	} else // 如果没有指定 cookie，重定向页面到 index.jsp
+		response.sendRedirect("index.jsp");
 %>
 
 <!DOCTYPE html>

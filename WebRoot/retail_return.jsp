@@ -1,8 +1,38 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java"
+	import="java.util.*, models.ManagerDao, org.json.JSONArray, org.json.JSONObject"
+	pageEncoding="UTF-8"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+%>
+<%
+	String mname = null;
+	String passwd = null;
+	Cookie[] cookies = request.getCookies(); // 获取 cookies
+	for (int i = 0; i < cookies.length; i++) { // 获取 cookies 中的 mname 和 passwd
+		if ("mname".equals(cookies[i].getName()))
+			mname = cookies[i].getValue();
+		if ("passwd".equals(cookies[i].getName()))
+			passwd = cookies[i].getValue();
+	}
+
+	if (mname != null && passwd != null) {
+		ManagerDao managerDao = new ManagerDao();
+
+		String managerJsonString = managerDao.search_manager(new String[]{"PASSWD"}, "MNAME", mname, -1);
+		JSONArray managerJsonArray = new JSONArray(managerJsonString);
+		if (managerJsonArray.length() != 1) { // 如果找不到该用户名，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+		JSONObject managerJsonObject = managerJsonArray.getJSONObject(0);
+		if (!passwd.equals(managerJsonObject.getString("PASSWD"))) { // 如果 passwd 与数据库中的 passwd 不相同，重定向到 index.jsp
+			response.sendRedirect("index.jsp");
+			return;
+		}
+	} else // 如果没有指定 cookie，重定向页面到 index.jsp
+		response.sendRedirect("index.jsp");
 %>
 
 <!DOCTYPE html>
@@ -23,14 +53,14 @@
 
 		layer.style.display = "block";
 		formWindow.style.display = "block";
-		
+
 		cancelButton.onclick = function() {
 			history.back(-1);
 		}
 
 		confirmButton.onclick = function() {
 			var oInput = formWindow.querySelectorAll("input");
-			
+
 			if (!oInput[0].value || !oInput[1].value)
 				return;
 
@@ -71,8 +101,7 @@
 <body>
 	<header>
 		<h1>
-			<img src="images/logo-line.png">
-			图书销售系统
+			<img src="images/logo-line.png"> 图书销售系统
 		</h1>
 		<input type="text" name="search_input" id="search_input" disabled />
 		<button type="button" id="select" disabled>查询</button>
@@ -99,18 +128,16 @@
 	<div id="layer">
 		<div class="form-window">
 			<h1>输入小票信息</h1>
-			<span>流水号</span> <input type="text" />
-			<span>会员姓名</span> <input type="text" />
+			<span>流水号</span> <input type="text" /> <span>会员姓名</span> <input
+				type="text" />
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="success-message">
-			<img src="images/completed.png">
-			<span>退货成功</span>
+			<img src="images/completed.png"> <span>退货成功</span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png">
-			<span>请检查流水号和会员姓名是否填写正确</span>
+			<img src="images/error.png"> <span>请检查流水号和会员姓名是否填写正确</span>
 		</div>
 	</div>
 </body>

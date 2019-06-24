@@ -57,6 +57,7 @@ public class Book_insert extends HttpServlet {
 		String author = request.getParameter("author");
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 		float retail_price = Float.valueOf(request.getParameter("retail_price"));
+		float purchase_price = Float.valueOf(request.getParameter("purchase_price"));
 		String publisher = request.getParameter("publisher");
 
 		PrintWriter writer = response.getWriter();	// 实例化输出流对象，通过输出流对象将内容传到前端
@@ -84,7 +85,7 @@ public class Book_insert extends HttpServlet {
 		String publisher_id = publisherJsonObject.getString("PID");
 
 		try {
-			booksDao.insert_into_books(ISBN, title, author, quantity, retail_price, publisher);
+			booksDao.insert_into_books(ISBN, title, author, quantity, retail_price, purchase_price, publisher);
 			publisherDao.update_publisher(new String[] { "BOOKS_NUM" },
 					new String[] { String.valueOf(books_num + quantity) }, "PNAME", publisher);
 			purchaseRecordDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);

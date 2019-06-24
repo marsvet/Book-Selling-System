@@ -28,14 +28,14 @@ public class BooksDao {
 			// 使用 MINUS 分页查询
 			if ("ALL".equals(value)) // 特殊情况一：value 为 "ALL" 时，sql 为查询所有书籍
 			{
-					sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*(" + page + "-1)";
+					sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, PURCHASE_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, PURCHASE_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND ROWNUM<=10*(" + page + "-1)";
 					getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID";
 			}
 			else // 特殊情况二：value 不为 "ALL" 时，sql 为一个多条件查询
 			{	
-				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
+				sql = "SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, PURCHASE_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
 						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
-						+ value + "%') AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, LOWEST_DISCOUNT_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
+						+ value + "%') AND ROWNUM<=10*" + page + " MINUS SELECT ISBN, TITLE, AUTHOR, INVENTORY, RETAIL_PRICE, PURCHASE_PRICE, PNAME FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
 						+ value + "' OR TITLE LIKE '%" + value + "%' OR AUTHOR LIKE '%" + value + "%' OR PNAME LIKE '%"
 						+ value + "%') AND ROWNUM<=10*(" + page + "-1)"; // TITLE, AUTHOR, PNAME 列使用 LIKE 进行模糊查询
 				getCountSql = "SELECT COUNT(*) ITEM_NUMBER FROM BOOKS, PUBLISHER WHERE BOOKS.PUBLISHER_ID=PUBLISHER.PID AND (ISBN='"
@@ -85,14 +85,14 @@ public class BooksDao {
 		return jsonArray.toString(); // 将 json 数组转换成字符串并返回
 	}
 
-	public boolean insert_into_books(String ISBN, String title, String author, int inventory, float retail_price,
+	public boolean insert_into_books(String ISBN, String title, String author, int inventory, float retail_price, float purchase_price,
 			String publisher) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
 		/* 创建 CallableStatement 对象，该对象能调用存储过程和函数 */
-		CallableStatement cstmt = connection.prepareCall("{CALL INSERT_INTO_BOOKS(?, ?, ?, ?, ?, ?)}"); // 先用问号代替参数
+		CallableStatement cstmt = connection.prepareCall("{CALL INSERT_INTO_BOOKS(?, ?, ?, ?, ?, ?, ?)}"); // 先用问号代替参数
 
 		/* 设置要向存储过程传入的参数 */
 		cstmt.setString(1, ISBN);
@@ -100,7 +100,8 @@ public class BooksDao {
 		cstmt.setString(3, author);
 		cstmt.setInt(4, inventory);
 		cstmt.setFloat(5, retail_price);
-		cstmt.setString(6, publisher);
+		cstmt.setFloat(6, purchase_price);
+		cstmt.setString(7, publisher);
 
 		boolean result = cstmt.execute(); // 调用存储过程，返回值为 boolean，表示是否执行成功
 

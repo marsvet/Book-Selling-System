@@ -152,11 +152,11 @@
 						liHTML += '</div><div class="column2">';
 						liHTML += "<p>库存：" + "</p>";
 						liHTML += "<p>零售价：" + "</p>";
-						liHTML += "<p>最低折扣价：" + "</p>";
+						liHTML += "<p>进价：" + "</p>";
 						liHTML += '</div><div class="column3">';
 						liHTML += "<p>" + jsonObj[i]["INVENTORY"] + "</p>";
 						liHTML += "<p>" + jsonObj[i]["RETAIL_PRICE"] + "</p>";
-						liHTML += "<p>" + jsonObj[i]["LOWEST_DISCOUNT_PRICE"] + "</p>";
+						liHTML += "<p>" + jsonObj[i]["PURCHASE_PRICE"] + "</p>";
 						liHTML += '</div><div class="column4"><button type="button" class="sale-button">出售</button></div></li>';
 
 						oUl.innerHTML += liHTML;

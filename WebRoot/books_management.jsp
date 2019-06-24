@@ -154,11 +154,11 @@
 					liHTML += '</div><div class="column2">';
 					liHTML += "<p>库存：" + "</p>";
 					liHTML += "<p>零售价：" + "</p>";
-					liHTML += "<p>最低折扣价：" + "</p>";
+					liHTML += "<p>进价：" + "</p>";
 					liHTML += '</div><div class="column3">';
 					liHTML += "<p>" + jsonObj[i]["INVENTORY"] + "</p>";
 					liHTML += "<p>" + jsonObj[i]["RETAIL_PRICE"] + "</p>";
-					liHTML += "<p>" + jsonObj[i]["LOWEST_DISCOUNT_PRICE"] + "</p>";
+					liHTML += "<p>" + jsonObj[i]["PURCHASE_PRICE"] + "</p>";
 					liHTML += '</div><div class="column4"><button type="button" class="return-book-button">退货</button><br><button type="button" class="restock-button">再进货</button><br><button type="button" class="modify-info-button">资料修改</button></div></li>';
 
 					oUl.innerHTML += liHTML;
@@ -206,7 +206,7 @@
 			);
 			xmlHttpRequest.send(
 				"ISBN=" + oInput[0].value + "&title=" + oInput[1].value + "&author=" + oInput[2].value
-				+ "&quantity=" + oInput[3].value + "&retail_price=" + oInput[4].value + "&publisher=" + oInput[5].value
+				+ "&quantity=" + oInput[3].value + "&purchase_price=" + oInput[4].value + "&retail_price=" + oInput[5].value + "&publisher=" + oInput[6].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -509,8 +509,9 @@
 			<h1>新书进货</h1>
 			<span>ISBN</span> <input type="text" /> <span>书名</span> <input
 				type="text" /> <span>作者</span> <input type="text" /> <span>进货数量</span>
-			<input type="number" /> <span>零售价</span> <input type="text" /> <span>出版社</span>
-			<input type="text" />
+			<input type="number" /> <span>进价</span> <input type="number"
+				step="0.01" /><span>零售价</span> <input type="number" step="0.01" />
+			<span>出版社</span> <input type="text" />
 			<button type="button" class="confirm">确定</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
@@ -528,7 +529,8 @@
 			<h1>图书资料修改</h1>
 			<span>ISBN</span> <input type="text" /> <span>书名</span> <input
 				type="text" /> <span>作者</span> <input type="text" /><span>出版社</span>
-			<input type="text" /><span>零售价</span> <input type="text" />
+			<input type="text" /><span>零售价</span> <input type="number"
+				step="0.01" />
 			<button type="button" class="confirm">修改</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

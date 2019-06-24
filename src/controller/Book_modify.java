@@ -66,7 +66,7 @@ public class Book_modify extends HttpServlet {
 			String booksJsonString = null;
 			String publisherJsonString = null;
 			try {
-				booksJsonString = booksDao.search_books(new String[] { "INVENTORY", "RETAIL_PRICE" }, "ISBN", ISBN, -1);
+				booksJsonString = booksDao.search_books(new String[] { "INVENTORY", "PURCHASE_PRICE" }, "ISBN", ISBN, -1);
 				publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME",
 						pname, -1);
 			} catch (ClassNotFoundException | SQLException e) {
@@ -77,7 +77,7 @@ public class Book_modify extends HttpServlet {
 			JSONArray booksJsonArray = new JSONArray(booksJsonString);	// 将 json 字符串转化为 json 数组对象
 			JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);	// 提取 json 数组中的第一个 json 对象
 			int inventory = Integer.valueOf(booksJsonObject.getString("INVENTORY"));
-			float retail_price = Float.valueOf(booksJsonObject.getString("RETAIL_PRICE"));
+			float purchase_price = Float.valueOf(booksJsonObject.getString("PURCHASE_PRICE"));
 
 			JSONArray publisherJsonArray = new JSONArray(publisherJsonString);
 			JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
@@ -90,7 +90,7 @@ public class Book_modify extends HttpServlet {
 						new String[] { String.valueOf(inventory + quantity) }, "ISBN", ISBN);
 				publisherDao.update_publisher(new String[] { "BOOKS_NUM" },
 						new String[] { String.valueOf(books_num + quantity) }, "PNAME", pname);
-				purchaseRecordDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);
+				purchaseRecordDao.insert_into_purchase_record(ISBN, quantity, purchase_price, publisher_id);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("{\"message\":\"输入信息不合法\"}");
 				writer.close();

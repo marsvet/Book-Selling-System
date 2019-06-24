@@ -560,7 +560,6 @@
 			</div>
 			<div>
 				<li class="current">系统设置</li>
-				<li>备份与恢复</li>
 			</div>
 		</ul>
 	</nav>

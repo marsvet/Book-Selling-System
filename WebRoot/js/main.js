@@ -8,8 +8,7 @@ function redirect() {
 		出版社管理 : "publishers_management.jsp",
 		会员组管理 : "member_groups_management.jsp",
 		打印报表 : "print_reports.jsp",
-		系统设置 : "system_settings.jsp",
-		备份与恢复 : "backup_and_recovery.jsp"
+		系统设置 : "system_settings.jsp"
 	};
 
 	window.location.href = pageMap[this.innerHTML];

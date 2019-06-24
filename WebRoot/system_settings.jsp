@@ -580,8 +580,12 @@
 			<h1>添加管理员</h1>
 			<span>姓名</span> <input type="text" /> <span>电话号码</span> <input
 				type="text" /> <span>身份证号码</span> <input type="text" /> <span>权限</span>
-			<input type="number" min="0" max="2" /> <span>密码</span> <input
-				type="password" /> <span>确认密码</span> <input type="password" />
+			<select>
+				<option>0</option>
+				<option>1</option>
+				<option>2</option>
+			</select> <span>密码</span> <input type="password" /> <span>确认密码</span> <input
+				type="password" />
 			<button type="button" class="confirm">添加</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
@@ -599,7 +603,11 @@
 			<button type="button" class="cancel">取消</button>
 		</div>
 		<div class="form-window" id="modify-permission">
-			<span>权限</span> <input type="number" min="0" max="2" />
+			<span>权限</span> <select>
+				<option>0</option>
+				<option>1</option>
+				<option>2</option>
+			</select>
 			<button type="button" class="confirm">修改</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

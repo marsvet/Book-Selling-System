@@ -237,7 +237,7 @@ div#result li {
 	padding-bottom: 10px;
 }
 
-.form-window span, .form-window input {
+.form-window span, .form-window input, .form-window select {
 	display: block;
 }
 
@@ -245,13 +245,17 @@ div#result li {
 	margin-top: 10px;
 }
 
-.form-window input {
+.form-window input, .form-window select {
 	margin-top: 5px;
 	padding: 10px;
 	width: 230px;
 	border: 1px gray solid;
 	outline-width: 0;
 	border-radius: 3px;
+}
+
+.form-window select {
+	width: 252px;
 }
 
 .form-window button, .information-window button, .alert-window button {

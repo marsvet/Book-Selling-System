@@ -116,7 +116,8 @@ p#error {
 
 		xmlHttpRequest.onreadystatechange = function() {
 			if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
-				if (xmlHttpRequest.responseText == "1") {
+				var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+				if (returnMessage === "success") {
 					var oCheckBox = document.getElementsByName("remember-me")[0];
 					if (oCheckBox.checked) {
 						var expireTime = new Date();
@@ -130,6 +131,7 @@ p#error {
 					window.location.href = "books_sale.jsp";
 				} else {
 					var oError = document.getElementById("error");
+					oError.innerHTML = returnMessage;
 					oError.style.display = "block";
 				}
 			}
@@ -147,7 +149,7 @@ p#error {
 			<form>
 				<input type="text" name="mname" placeholder="姓名" id="mname" /><br />
 				<input type="password" name="passwd" placeholder="密码" id="passwd" /><br />
-				<p id="error">姓名或密码错误！</p>
+				<p id="error"></p>
 				<label><input type="checkbox" name="remember-me" />下次记住我</label>
 				<button type="button" id="submit">登录</button>
 			</form>

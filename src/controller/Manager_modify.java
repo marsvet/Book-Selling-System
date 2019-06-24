@@ -61,7 +61,7 @@ public class Manager_modify extends HttpServlet {
 				managerDao.update_manager(new String[] { "MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER" },
 						new String[] { mname, new_phone_number, identification }, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"输入信息不合法\"}");
 				writer.close();
 				return;
 			}
@@ -72,25 +72,30 @@ public class Manager_modify extends HttpServlet {
 				managerDao.update_manager(new String[] { "PASSWD" }, new String[] { password }, "PHONE_NUMBER",
 						phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
 			break;
 		case "3":
 			String permission = request.getParameter("permission");
+			if (Integer.valueOf(permission) < 0 || Integer.valueOf(permission) > 2) {
+				writer.write("{\"message\":\"输入信息不合法\"}");
+				writer.close();
+				return;
+			}
 			try {
 				managerDao.update_manager(new String[] { "PERMISSION" }, new String[] { permission }, "PHONE_NUMBER",
 						phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
 			break;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

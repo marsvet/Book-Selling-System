@@ -58,12 +58,12 @@ public class Manager_insert extends HttpServlet {
 		try {
 			managerDao.insert_into_manager(mname, passwd, permission, identification_number, phone_number);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"输入信息不合法\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

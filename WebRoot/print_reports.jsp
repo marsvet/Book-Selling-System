@@ -247,12 +247,6 @@
 				<button type="button" id="next-page">下一页 →</button>
 			</div>
 		</div>
-		<div class="success-message">
-			<img src="images/completed.png"> <span>打印成功</span>
-		</div>
-		<div class="fail-message">
-			<img src="images/error.png"> <span>打印失败</span>
-		</div>
 	</div>
 </body>
 </html>

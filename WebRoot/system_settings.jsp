@@ -232,7 +232,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "添加成功";
 						addWindow.style.display = "none";
@@ -243,7 +244,7 @@
 						}, 1000);
 					} else {
 						oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "添加失败";
+						oSpan.innerHTML = returnMessage;
 						addWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -302,7 +303,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "修改成功";
 						modifyWindow.style.display = "none";
@@ -318,7 +320,7 @@
 						currentItem.querySelector(".column1>p:nth-child(3)").innerHTML = "身份证号码：" + oInput[2].value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "修改失败";
+						oSpan.innerHTML = returnMessage;
 						modifyWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -382,7 +384,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "修改成功";
 						modifyWindow.style.display = "none";
@@ -393,7 +396,7 @@
 						}, 1000);
 					} else {
 						oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "修改失败";
+						oSpan.innerHTML = returnMessage;
 						modifyWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -446,7 +449,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "修改成功";
 						modifyWindow.style.display = "none";
@@ -460,7 +464,7 @@
 						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oInput.value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "修改失败";
+						oSpan.innerHTML = returnMessage;
 						modifyWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -508,7 +512,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "删除成功";
 						deleteWindow.style.display = "none";
@@ -522,7 +527,7 @@
 						currentItem.style.display = "none";
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "删除失败";
+						oSpan.innerHTML = returnMessage;
 						deleteWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {

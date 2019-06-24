@@ -69,11 +69,16 @@ public class Book_insert extends HttpServlet {
 			publisherJsonString = publisherDao.search_publisher(new String[] { "PID", "BOOKS_NUM" }, "PNAME",
 					publisher, -1);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");		// sql 语句执行失败，则向前端返回 "0"
+			writer.write("{\"message\":\"系统内部错误\"}");		// sql 语句执行失败，返回“系统内部错误”
 			writer.close();
 			return;
 		}
 		JSONArray publisherJsonArray = new JSONArray(publisherJsonString);
+		if (publisherJsonArray.length() == 0) {
+			writer.write("{\"message\":\"请先录入出版社信息\"}");
+			writer.close();
+			return;
+		}
 		JSONObject publisherJsonObject = publisherJsonArray.getJSONObject(0);
 		int books_num = Integer.valueOf(publisherJsonObject.getString("BOOKS_NUM"));
 		String publisher_id = publisherJsonObject.getString("PID");
@@ -84,12 +89,12 @@ public class Book_insert extends HttpServlet {
 					new String[] { String.valueOf(books_num + quantity) }, "PNAME", publisher);
 			purchaseRecordDao.insert_into_purchase_record(ISBN, quantity, retail_price, publisher_id);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"输入信息不合法\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");	// sql 语句全部执行成功，向前端返回 "1"
+		writer.write("{\"message\":\"success\"}");	// sql 语句全部执行成功，向前端返回 "1"
 		writer.close();
 	}
 

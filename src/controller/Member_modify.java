@@ -63,7 +63,7 @@ public class Member_modify extends HttpServlet {
 			try {
 				membersDao.update_members(new String[] {"MNAME", "PHONE_NUMBER", "IDENTIFICATION_NUMBER"}, new String[] {mname, new_phone_number, identification}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"输入信息不合法\"}");
 				writer.close();
 				return;
 			}
@@ -73,7 +73,7 @@ public class Member_modify extends HttpServlet {
 			try {
 				membersJsonString = membersDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number, -1);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
@@ -84,7 +84,7 @@ public class Member_modify extends HttpServlet {
 			try {
 				membersDao.update_members(new String[] {"BALANCE"}, new String[] {String.valueOf(balance + recharge_amount)}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
@@ -93,7 +93,7 @@ public class Member_modify extends HttpServlet {
 			try {
 				membersDao.update_members(new String[] {"STATUS"}, new String[] {"0"}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
@@ -102,14 +102,14 @@ public class Member_modify extends HttpServlet {
 			try {
 				membersDao.update_members(new String[] {"STATUS"}, new String[] {"1"}, "PHONE_NUMBER", phone_number);
 			} catch (ClassNotFoundException | SQLException e) {
-				writer.write("0");
+				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
 				return;
 			}
 			break;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

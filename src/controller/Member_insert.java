@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+
+import models.MemberGroupDao;
 import models.MembersDao;
 
 /**
@@ -53,16 +56,32 @@ public class Member_insert extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		MembersDao membersDao = new MembersDao();
+		MemberGroupDao memberGroupDao = new MemberGroupDao();
 
+		String memberGroupJsonString = null;
 		try {
-			membersDao.insert_into_members(mname, identification_number, phone_number, members_group);
+			memberGroupJsonString = memberGroupDao.search_members_group(new String[] {"MNAME"}, "MNAME", members_group);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"系统内部错误\"}");		// sql 语句执行失败，返回“系统内部错误”
+			writer.close();
+			return;
+		}
+		JSONArray memberGroupJsonArray = new JSONArray(memberGroupJsonString);
+		if (memberGroupJsonArray.length() == 0) {
+			writer.write("{\"message\":\"此会员组不存在\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		try {
+			membersDao.insert_into_members(mname, identification_number, phone_number, members_group);
+		} catch (ClassNotFoundException | SQLException e) {
+			writer.write("{\"message\":\"输入信息不合法\"}");
+			writer.close();
+			return;
+		}
+
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

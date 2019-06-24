@@ -213,7 +213,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "进货成功";
 						addWindow.style.display = "none";
@@ -224,7 +225,7 @@
 						}, 1000);
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "进货失败";
+						oSpan.innerHTML = returnMessage;
 						addWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -279,7 +280,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "退货成功";
 						returnBookWindow.style.display = "none";
@@ -294,7 +296,7 @@
 						inventoryItem.innerHTML = Number(inventoryItem.innerHTML) - Number(oInput.value);
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "退货失败";
+						oSpan.innerHTML = returnMessage;
 						returnBookWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -349,9 +351,10 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
-						oSpan.innerHTML = "进货成功";
+						oSpan.innerHTML = returnMessage;
 						restockWindow.style.display = "none";
 						successMessage.style.display = "block";
 						setTimeout(function() {
@@ -430,7 +433,8 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						var oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "修改成功";
 						modifyWindow.style.display = "none";
@@ -448,7 +452,7 @@
 						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oInput[4].value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
-						oSpan.innerHTML = "修改失败";
+						oSpan.innerHTML = returnMessage;
 						modifyWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {

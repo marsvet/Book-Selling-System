@@ -54,12 +54,12 @@ public class Members_group_delete extends HttpServlet {
 		try {
 			memberGroupDao.delete_from_members_group(mgname);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"系统内部错误\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

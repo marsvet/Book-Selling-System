@@ -57,12 +57,12 @@ public class Publisher_modify extends HttpServlet {
 			publisherDao.update_publisher(new String[] { "PNAME", "PLOCATION" },
 					new String[] { new_pname, plocation }, "PNAME", pname);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"系统内部错误\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

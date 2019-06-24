@@ -54,7 +54,7 @@ public class Members_group_modify extends HttpServlet {
 		MemberGroupDao memberGroupDao = new MemberGroupDao();
 
 		if (Float.valueOf(discount) < 1 || Float.valueOf(discount) > 10) {
-			writer.write("0");
+			writer.write("{\"message\":\"折扣为 1-10 的小数或整数\"}");
 			writer.close();
 			return;
 		}
@@ -63,12 +63,12 @@ public class Members_group_modify extends HttpServlet {
 			memberGroupDao.update_members_group(new String[] { "MNAME", "DISCOUNT" }, new String[] { new_mpname, discount },
 					"MNAME", mpname);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"系统内部错误\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

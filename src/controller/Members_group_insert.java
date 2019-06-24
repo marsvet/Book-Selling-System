@@ -18,14 +18,14 @@ import models.MemberGroupDao;
 @WebServlet("/Members_group_insert")
 public class Members_group_insert extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Members_group_insert() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Members_group_insert() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
@@ -51,9 +51,9 @@ public class Members_group_insert extends HttpServlet {
 
 		PrintWriter writer = response.getWriter();
 		MemberGroupDao memberGroupDao = new MemberGroupDao();
-		
+
 		if (discount < 1 || discount > 10) {
-			writer.write("0");
+			writer.write("{\"message\":\"折扣为 1-10 的小数或整数\"}");
 			writer.close();
 			return;
 		}
@@ -61,12 +61,12 @@ public class Members_group_insert extends HttpServlet {
 		try {
 			memberGroupDao.insert_into_members_group(mgname, discount);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("0");
+			writer.write("{\"message\":\"系统内部错误\"}");
 			writer.close();
 			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

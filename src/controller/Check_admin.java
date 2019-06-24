@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.CheckAdminDao;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import models.ManagerDao;
 
 /**
  * Servlet implementation class Check_admin
@@ -50,20 +53,30 @@ public class Check_admin extends HttpServlet {
 
 		String mname = request.getParameter("mname");
 		String passwd = request.getParameter("passwd");
-		CheckAdminDao checkAdminDao = new CheckAdminDao();
+		ManagerDao managerDao = new ManagerDao();
 
-		int count = 0;
+		String jsonString = null;
 		try {
-			count = checkAdminDao.check_admin(mname, passwd);
+			jsonString = managerDao.search_manager(new String[] {"PASSWD"}, "MNAME", mname, -1);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			writer.write("{\"message\":\"系统内部错误\"}");		// sql 语句执行失败，返回“系统内部错误”
+			writer.close();
+			return;
+		}
+		JSONArray jsonArray = new JSONArray(jsonString);
+		if (jsonArray.length() == 0) {
+			writer.write("{\"message\":\"此账号不存在！\"}");
+			writer.close();
+			return;
+		}
+		JSONObject jsonObject = jsonArray.getJSONObject(0);
+		if (!passwd.equals(jsonObject.getString("PASSWD"))) {
+			writer.write("{\"message\":\"密码错误！\"}");
+			writer.close();
+			return;
 		}
 
-		if (count > 0)
-			writer.write("1");
-		else
-			writer.write("0");
-
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

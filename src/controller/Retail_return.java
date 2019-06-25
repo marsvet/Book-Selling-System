@@ -63,7 +63,7 @@ public class Retail_return extends HttpServlet {
 		try {
 			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID", "IS_VALID" },
 					"SERIAL_NUMBER", serial_number, -1);
-			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
+			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE", "STATUS" }, "MEMBERS.MNAME",
 					memberName, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("{\"message\":\"系统内部错误\"}");
@@ -79,12 +79,19 @@ public class Retail_return extends HttpServlet {
 		JSONObject salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
 
 		if ("[]".equals(membersJsonString)) {
-			writer.write("{\"message\":\"此会员不存在\"}");
+			writer.write("{\"message\":\"该会员不存在\"}");
 			writer.close();
 			return;
 		}
 		JSONArray membersJsonArray = new JSONArray(membersJsonString);
 		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
+		
+		String status = membersJsonObject.getString("STATUS");
+		if ("0".equals(status)) {
+			writer.write("{\"message\":\"该会员已办理挂失\"}");
+			writer.close();
+			return;
+		}
 		
 		String member_id1 = salesRecordJsonObject.getString("MEMBER_ID");
 		String member_id2 = membersJsonObject.getString("MID");

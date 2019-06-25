@@ -71,7 +71,7 @@ public class Member_modify extends HttpServlet {
 		case "2":
 			String membersJsonString = null;
 			try {
-				membersJsonString = membersDao.search_members(new String[]{"BALANCE"}, "PHONE_NUMBER", phone_number, -1);
+				membersJsonString = membersDao.search_members(new String[]{"BALANCE", "STATUS"}, "PHONE_NUMBER", phone_number, -1);
 			} catch (ClassNotFoundException | SQLException e) {
 				writer.write("{\"message\":\"系统内部错误\"}");
 				writer.close();
@@ -79,6 +79,12 @@ public class Member_modify extends HttpServlet {
 			}
 			JSONArray membersJsonArray = new JSONArray(membersJsonString);
 			JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
+			String status = membersJsonObject.getString("STATUS");
+			if ("0".equals(status)) {
+				writer.write("{\"message\":\"该会员已办理挂失，无法充值\"}");
+				writer.close();
+				return;
+			}
 			float balance = Float.valueOf(membersJsonObject.getString("BALANCE"));
 			float recharge_amount = Float.valueOf(request.getParameter("recharge_amount"));
 			try {

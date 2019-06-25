@@ -79,14 +79,14 @@ public class Book_sale extends HttpServlet {
 			e.printStackTrace();
 		}
 		if ("[]".equals(membersJsonString)) {
-			writer.write("{\"message\":\"此用户不存在\"}");
+			writer.write("{\"message\":\"该会员不存在\"}");
 			writer.close();
 			return;
 		}
 		JSONArray membersJsonArray = new JSONArray(membersJsonString);
 		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
 		if ("0".equals(membersJsonObject.getString("STATUS"))) {
-			writer.write("{\"message\":\"此用户已办理挂失\"}");
+			writer.write("{\"message\":\"该会员已办理挂失\"}");
 			writer.close();
 			return;
 		}
@@ -112,7 +112,7 @@ public class Book_sale extends HttpServlet {
 		int book_purchase = Integer.valueOf(membersJsonObject.getString("BOOK_PURCHASE"));
 
 		if (balance < retail_price * discount * quantity / 10) {
-			writer.write("{\"message\":\"用户余额不足\"}");
+			writer.write("{\"message\":\"会员余额不足\"}");
 			writer.close();
 			return;
 		}

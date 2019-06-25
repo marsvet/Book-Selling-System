@@ -643,10 +643,13 @@
 					layer.style.display = "block";
 					recordWindow.style.display = "block";
 
-					layer.onclick = function() {
+					var layerOnclick = function() {			// 定义一个事件处理程序
 						layer.style.display = "none";
 						recordWindow.style.display = "none";
+						layer.removeEventListener("click", layerOnclick, false);	// 点击 layer 后立即移除此事件
 					}
+
+					layer.addEventListener("click", layerOnclick, false);	// 添加 click 事件
 				} else {
 					var oSpan = failMessage.querySelector("span");
 					oSpan.innerHTML = "该会员无购书记录";

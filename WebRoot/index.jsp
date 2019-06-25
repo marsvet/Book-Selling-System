@@ -105,6 +105,12 @@ p#error {
 	function login() {
 		var mname = document.getElementById("mname").value;
 		var passwd = document.getElementById("passwd").value;
+		var oError = document.getElementById("error");
+		if (!mname || !passwd) {
+			oError.innerHTML = "姓名或密码为空！";
+			oError.style.display = "block";
+			return;
+		}
 
 		var xmlHttpRequest = new XMLHttpRequest();
 		xmlHttpRequest.open("POST", "Check_admin", true);
@@ -130,7 +136,6 @@ p#error {
 					}
 					window.location.href = "books_sale.jsp";
 				} else {
-					var oError = document.getElementById("error");
 					oError.innerHTML = returnMessage;
 					oError.style.display = "block";
 				}

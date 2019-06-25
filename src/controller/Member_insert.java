@@ -53,6 +53,7 @@ public class Member_insert extends HttpServlet {
 		String phone_number = request.getParameter("phone_number");
 		String identification_number = request.getParameter("identification");
 		String members_group = request.getParameter("members_group");
+		String passwd = request.getParameter("passwd");
 
 		PrintWriter writer = response.getWriter();
 		MembersDao membersDao = new MembersDao();
@@ -74,7 +75,7 @@ public class Member_insert extends HttpServlet {
 		}
 
 		try {
-			membersDao.insert_into_members(mname, identification_number, phone_number, members_group);
+			membersDao.insert_into_members(mname, identification_number, phone_number, members_group, passwd);
 		} catch (ClassNotFoundException | SQLException e) {
 			writer.write("{\"message\":\"输入信息不合法\"}");
 			writer.close();

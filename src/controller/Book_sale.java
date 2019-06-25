@@ -53,6 +53,7 @@ public class Book_sale extends HttpServlet {
 
 		String ISBN = request.getParameter("ISBN");
 		String phone_number = request.getParameter("phone_number");
+		String passwd = request.getParameter("passwd");
 		int quantity = Integer.valueOf(request.getParameter("quantity"));
 
 		PrintWriter writer = response.getWriter();
@@ -66,7 +67,9 @@ public class Book_sale extends HttpServlet {
 			booksJsonString = booksDao.search_books(new String[] { "TITLE", "AUTHOR", "INVENTORY", "RETAIL_PRICE" },
 					"ISBN", ISBN, -1);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			writer.write("{\"message\":\"系统内部错误\"}");
+			writer.close();
+			return;
 		}
 		JSONArray booksJsonArray = new JSONArray(booksJsonString);
 		JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
@@ -74,7 +77,7 @@ public class Book_sale extends HttpServlet {
 		String membersJsonString = null;
 		try {
 			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "STATUS",
-					"MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE" }, "PHONE_NUMBER", phone_number, -1);
+					"MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE", "PASSWD" }, "PHONE_NUMBER", phone_number, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
@@ -85,6 +88,11 @@ public class Book_sale extends HttpServlet {
 		}
 		JSONArray membersJsonArray = new JSONArray(membersJsonString);
 		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
+		if (!passwd.equals(membersJsonObject.getString("PASSWD"))) {
+			writer.write("{\"message\":\"密码错误\"}");
+			writer.close();
+			return;
+		}
 		if ("0".equals(membersJsonObject.getString("STATUS"))) {
 			writer.write("{\"message\":\"该会员已办理挂失\"}");
 			writer.close();

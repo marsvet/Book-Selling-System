@@ -188,7 +188,7 @@
 		}
 
 		confirmButton.onclick = function() {
-			if (!oInput[0].value || !oInput[1].value)
+			if (!oInput[0].value || !oInput[1].value || !oInput[2].value)
 				return;
 
 			var xmlHttpRequest = new XMLHttpRequest();
@@ -203,8 +203,10 @@
 				ISBN.innerHTML.slice(5) +
 				"&phone_number=" +
 				oInput[0].value +
+				"&passwd=" +
+				oInput[1].value +
 				"&quantity=" +
-				oInput[1].value
+				oInput[2].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -228,7 +230,7 @@
 
 						layer.querySelector(".form-window").style.display = "none";
 						layer.querySelector(".information-window").style.display = "block";
-						inventory.innerHTML = Number(inventory.innerHTML) - Number(oInput[1].value);
+						inventory.innerHTML = Number(inventory.innerHTML) - Number(oInput[2].value);
 
 						var printButton = layer.querySelector(".information-window>button");
 						printButton.onclick = function() {
@@ -292,7 +294,7 @@
 	<div id="layer">
 		<div class="form-window">
 			<h1>填写信息</h1>
-			<span>会员电话</span> <input type="text" /> <span>购书数量</span> <input
+			<span>会员电话</span> <input type="text" /><span>密码</span> <input type="password" /> <span>购书数量</span> <input
 				type="number" />
 			<button type="button" class="confirm">出售</button>
 			<button type="button" class="cancel">取消</button>

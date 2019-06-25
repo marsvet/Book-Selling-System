@@ -170,7 +170,7 @@
 							liHTML += "<p>正常</p>";
 						else
 							liHTML += "<p>已挂失</p>";
-						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改资料</button><button type="button" class="recharge-button">充值</button><br><button type="button" class="loss-button">';
+						liHTML += '</div><div class="column4"><button type="button" class="modify-info-button">修改资料</button><button type="button" class="modify-passwd-button">修改密码</button><br><button type="button" class="recharge-button">充值</button><button type="button" class="loss-button">';
 						if (jsonObj[i]["STATUS"] == 1)
 							liHTML += "挂失";
 						else
@@ -182,6 +182,9 @@
 					var modifyInfoButton = document.getElementsByClassName("modify-info-button");
 					for (var j = 0; j < modifyInfoButton.length; j++)
 						modifyInfoButton[j].onclick = modifyInfo;
+					var modifyPasswdButton = document.getElementsByClassName("modify-passwd-button");
+					for (var j = 0; j < modifyPasswdButton.length; j++)
+						modifyPasswdButton[j].onclick = modifyPasswd;
 					var rechargeButton = document.getElementsByClassName("recharge-button");
 					for (var j = 0; j < rechargeButton.length; j++)
 						rechargeButton[j].onclick = recharge;
@@ -221,8 +224,21 @@
 		}
 
 		confirmButton.onclick = function() {
-			if (!oInput[0].value || !oInput[1].value || !oInput[2].value || !oInput[3].value)
+			for (var i = 0; i < oInput.length; i++)
+				if (!oInput[i].value)
+					return;
+					
+			var oSpan = failMessage.querySelector("span");
+			if (oInput[4].value != oInput[5].value) {
+				oSpan.innerHTML = "两次输入的密码不一致";
+				addWindow.style.display = "none";
+				failMessage.style.display = "block";
+				setTimeout(function() {
+					failMessage.style.display = "none";
+					addWindow.style.display = "block";
+				}, 2000);
 				return;
+			}
 
 			var xmlHttpRequest = new XMLHttpRequest();
 			xmlHttpRequest.open("POST", "Member_insert", true);
@@ -231,7 +247,7 @@
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"mname=" + oInput[0].value + "&phone_number=" + oInput[1].value + "&identification=" + oInput[2].value + "&members_group=" + oInput[3].value
+				"mname=" + oInput[0].value + "&phone_number=" + oInput[1].value + "&identification=" + oInput[2].value + "&members_group=" + oInput[3].value + "&passwd=" + oInput[4].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -240,7 +256,7 @@
 				) {
 					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
 					if (returnMessage === "success") {
-						var oSpan = successMessage.querySelector("span");
+						oSpan = successMessage.querySelector("span");
 						oSpan.innerHTML = "注册成功";
 						addWindow.style.display = "none";
 						successMessage.style.display = "block";
@@ -249,7 +265,7 @@
 							layer.style.display = "none";
 						}, 1000);
 					} else {
-						var oSpan = failMessage.querySelector("span");
+						oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = returnMessage;
 						addWindow.style.display = "none";
 						failMessage.style.display = "block";
@@ -324,6 +340,83 @@
 						currentItem.querySelector(".column1>h1").innerHTML = oInput[0].value;
 						currentItem.querySelector(".column1>p:nth-child(2)").innerHTML = "电话号码：" + oInput[1].value;
 						currentItem.querySelector(".column1>p:nth-child(3)").innerHTML = "身份证号码：" + oInput[2].value;
+					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = returnMessage;
+						modifyWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							modifyWindow.style.display = "block";
+						}, 2000);
+					}
+				}
+			};
+		}
+	}
+
+	function modifyPasswd() {
+		var currentItem = this.parentElement.parentElement;
+		var phoneNumber = currentItem.querySelector(".column1>p:nth-child(2)").innerHTML;
+		phoneNumber = phoneNumber.slice(5, phoneNumber.length);
+
+		var layer = document.getElementById("layer");
+		var modifyWindow = layer.querySelector("#modify-passwd");
+		var oInput = modifyWindow.querySelectorAll("input");
+		var confirmButton = modifyWindow.querySelector(".confirm");
+		var cancelButton = modifyWindow.querySelector(".cancel");
+		var successMessage = layer.querySelector(".success-message");
+		var failMessage = layer.querySelector(".fail-message");
+
+		layer.style.display = "block";
+		modifyWindow.style.display = "block";
+
+		cancelButton.onclick = function() {
+			layer.style.display = "none";
+			modifyWindow.style.display = "none";
+		}
+
+		confirmButton.onclick = function() {
+			if (!oInput[0].value || !oInput[1].value || !oInput[2].value)
+				return;
+
+			var oSpan = failMessage.querySelector("span");
+			if (oInput[1].value != oInput[2].value) {
+				oSpan.innerHTML = "两次输入的密码不一致";
+				modifyWindow.style.display = "none";
+				failMessage.style.display = "block";
+				setTimeout(function() {
+					failMessage.style.display = "none";
+					modifyWindow.style.display = "block";
+				}, 2000);
+				return;
+			}
+
+			var xmlHttpRequest = new XMLHttpRequest();
+			xmlHttpRequest.open("POST", "Member_modify", true);
+			xmlHttpRequest.setRequestHeader(
+				"Content-Type",
+				"application/x-www-form-urlencoded"
+			);
+			xmlHttpRequest.send(
+				"option=5&phone_number=" + phoneNumber + "&old_passwd=" + oInput[0].value +
+				"&new_passwd=" + oInput[1].value
+			);
+			xmlHttpRequest.onreadystatechange = function() {
+				if (
+					xmlHttpRequest.readyState == 4 &&
+					xmlHttpRequest.status == 200
+				) {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
+						var oSpan = successMessage.querySelector("span");
+						oSpan.innerHTML = "修改成功";
+						modifyWindow.style.display = "none";
+						successMessage.style.display = "block";
+						setTimeout(function() {
+							successMessage.style.display = "none";
+							layer.style.display = "none";
+						}, 1000);
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = returnMessage;
@@ -643,13 +736,13 @@
 					layer.style.display = "block";
 					recordWindow.style.display = "block";
 
-					var layerOnclick = function() {			// 定义一个事件处理程序
+					var layerOnclick = function() { // 定义一个事件处理程序
 						layer.style.display = "none";
 						recordWindow.style.display = "none";
-						layer.removeEventListener("click", layerOnclick, false);	// 点击 layer 后立即移除此事件
+						layer.removeEventListener("click", layerOnclick, false); // 点击 layer 后立即移除此事件
 					}
 
-					layer.addEventListener("click", layerOnclick, false);	// 添加 click 事件
+					layer.addEventListener("click", layerOnclick, false); // 添加 click 事件
 				} else {
 					var oSpan = failMessage.querySelector("span");
 					oSpan.innerHTML = "该会员无购书记录";
@@ -707,8 +800,9 @@
 		<div class="form-window" id="add-member">
 			<h1>会员注册</h1>
 			<span>姓名</span> <input type="text" /> <span>电话号码</span> <input
-				type="text" /> <span>身份证号码</span> <input type="text" /> <span>会员组</span>
-			<input type="text" />
+				type="text" /> <span>身份证号码</span> <input type="text" /> <span>会员组</span><input
+				type="text" /> <span>密码</span> <input type="password" /><span>确认密码</span>
+			<input type="password" />
 			<button type="button" class="confirm">注册</button>
 			<button type="button" class="cancel">取消</button>
 		</div>
@@ -716,6 +810,12 @@
 			<h1>会员资料修改</h1>
 			<span>姓名</span> <input type="text" /> <span>电话号码</span> <input
 				type="text" /> <span>身份证号码</span> <input type="text" />
+			<button type="button" class="confirm">修改</button>
+			<button type="button" class="cancel">取消</button>
+		</div>
+		<div class="form-window" id="modify-passwd">
+			<span>旧密码</span> <input type="password" /> <span>新密码</span> <input
+				type="password" /> <span>确认密码</span> <input type="password" />
 			<button type="button" class="confirm">修改</button>
 			<button type="button" class="cancel">取消</button>
 		</div>

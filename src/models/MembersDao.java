@@ -80,15 +80,16 @@ public class MembersDao {
 
 	/* 调用存储过程插入会员 */
 	public boolean insert_into_members(String mname, String identification_number, String phone_number,
-			String members_group) throws SQLException, ClassNotFoundException {
+			String members_group, String passwd) throws SQLException, ClassNotFoundException {
 		Class.forName("oracle.jdbc.OracleDriver");
 
 		Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-		CallableStatement cstmt = connection.prepareCall("{CALL INSERT_INTO_MEMBERS(?, ?, ?, ?)}");
+		CallableStatement cstmt = connection.prepareCall("{CALL INSERT_INTO_MEMBERS(?, ?, ?, ?, ?)}");
 		cstmt.setString(1, mname);
 		cstmt.setString(2, identification_number);
 		cstmt.setString(3, phone_number);
 		cstmt.setString(4, members_group);
+		cstmt.setString(5, passwd);
 
 		boolean result = cstmt.execute();
 

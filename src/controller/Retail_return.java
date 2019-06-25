@@ -59,29 +59,27 @@ public class Retail_return extends HttpServlet {
 		SalesRecordDao salesRecordDao = new SalesRecordDao();
 
 		String salesRecordJsonString = null;
+		String membersJsonString = null;
 		try {
-			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID" },
+			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "ISBN", "QUANTITY", "PRICE", "MEMBER_ID", "IS_VALID" },
 					"SERIAL_NUMBER", serial_number, -1);
+			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
+					memberName, -1);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			writer.write("{\"message\":\"系统内部错误\"}");
+			writer.close();
+			return;
 		}
 		if ("[]".equals(salesRecordJsonString)) {
-			writer.write("0");
+			writer.write("{\"message\":\"流水号不存在\"}");
 			writer.close();
 			return;
 		}
 		JSONArray salesRecordJsonArray = new JSONArray(salesRecordJsonString);
 		JSONObject salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
 
-		String membersJsonString = null;
-		try {
-			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "BALANCE" }, "MEMBERS.MNAME",
-					memberName, -1);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
 		if ("[]".equals(membersJsonString)) {
-			writer.write("0");
+			writer.write("{\"message\":\"此会员不存在\"}");
 			writer.close();
 			return;
 		}
@@ -91,7 +89,14 @@ public class Retail_return extends HttpServlet {
 		String member_id1 = salesRecordJsonObject.getString("MEMBER_ID");
 		String member_id2 = membersJsonObject.getString("MID");
 		if (!member_id1.equals(member_id2)){
-			writer.write("0");
+			writer.write("{\"message\":\"销售记录与会员信息不匹配\"}");
+			writer.close();
+			return;
+		}
+		
+		String is_valid = salesRecordJsonObject.getString("IS_VALID");
+		if ("0".equals(is_valid)) {
+			writer.write("{\"message\":\"不可重复退货\"}");
 			writer.close();
 			return;
 		}
@@ -101,7 +106,9 @@ public class Retail_return extends HttpServlet {
 		try {
 			booksJsonString = booksDao.search_books(new String[] { "INVENTORY" }, "ISBN", ISBN, -1);
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			writer.write("{\"message\":\"系统内部错误\"}");
+			writer.close();
+			return;
 		}
 		JSONArray booksJsonArray = new JSONArray(booksJsonString);
 		JSONObject booksJsonObject = booksJsonArray.getJSONObject(0);
@@ -115,25 +122,17 @@ public class Retail_return extends HttpServlet {
 		try {
 			booksDao.update_books(new String[] { "INVENTORY" }, new String[] { String.valueOf(inventory + quantity) },
 					"ISBN", ISBN);
-		} catch (ClassNotFoundException | SQLException e1) {
-			e1.printStackTrace();
-		}
-
-		try {
 			membersDao.update_members(new String[] { "BOOK_PURCHASE", "BALANCE" }, new String[] {
 					String.valueOf(book_purchase - quantity), String.valueOf(balance + retail_price * quantity) },
 					"MNAME", memberName);
-		} catch (ClassNotFoundException | SQLException e1) {
-			e1.printStackTrace();
-		}
-
-		try {
 			salesRecordDao.sales_record_transform_to_invalid(serial_number);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException | SQLException e1) {
+			writer.write("{\"message\":\"系统内部错误\"}");
+			writer.close();
+			return;
 		}
 
-		writer.write("1");
+		writer.write("{\"message\":\"success\"}");
 		writer.close();
 	}
 

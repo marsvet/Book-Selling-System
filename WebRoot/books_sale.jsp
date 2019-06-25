@@ -174,6 +174,7 @@
 		var ISBN = currentItem.querySelector(".column1>p:nth-child(4)");
 		var inventory = currentItem.querySelector(".column3>p:first-child");
 		var layer = document.getElementById("layer");
+		var saleWindow = layer.querySelector(".form-window");
 		var oInput = layer.getElementsByTagName("input");
 		var confirmButton = layer.querySelector(".confirm");
 		var cancelButton = layer.querySelector(".cancel");
@@ -210,27 +211,41 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					var oDiv = document.querySelectorAll(".table-row>div:last-child");
 					var jsonObj = JSON.parse(xmlHttpRequest.responseText);
+					var returnMessage = jsonObj["message"];
+					if (returnMessage === "success") {
+						var oDiv = document.querySelectorAll(".table-row>div:last-child");
+						var jsonObj = JSON.parse(xmlHttpRequest.responseText);
 
-					oDiv[0].innerHTML = jsonObj["SERIAL_NUMBER"];
-					oDiv[1].innerHTML = jsonObj["ISBN"];
-					oDiv[2].innerHTML = jsonObj["TITLE"];
-					oDiv[3].innerHTML = jsonObj["AUTHOR"];
-					oDiv[4].innerHTML = jsonObj["MNAME"];
-					oDiv[5].innerHTML = jsonObj["UNIT_PRICE"];
-					oDiv[6].innerHTML = jsonObj["QUANTITY"];
-					oDiv[7].innerHTML = jsonObj["DATE_OF_SALE"];
+						oDiv[0].innerHTML = jsonObj["SERIAL_NUMBER"];
+						oDiv[1].innerHTML = jsonObj["ISBN"];
+						oDiv[2].innerHTML = jsonObj["TITLE"];
+						oDiv[3].innerHTML = jsonObj["AUTHOR"];
+						oDiv[4].innerHTML = jsonObj["MNAME"];
+						oDiv[5].innerHTML = jsonObj["UNIT_PRICE"];
+						oDiv[6].innerHTML = jsonObj["QUANTITY"];
+						oDiv[7].innerHTML = jsonObj["DATE_OF_SALE"];
 
-					layer.querySelector(".form-window").style.display = "none";
-					layer.querySelector(".information-window").style.display = "block";
-					inventory.innerHTML = Number(inventory.innerHTML) - Number(oInput[1].value);
+						layer.querySelector(".form-window").style.display = "none";
+						layer.querySelector(".information-window").style.display = "block";
+						inventory.innerHTML = Number(inventory.innerHTML) - Number(oInput[1].value);
 
-					var printButton = layer.querySelector(".information-window>button");
-					printButton.onclick = function() {
-						layer.style.display = "none";
-						layer.querySelector(".information-window").style.display = "none";
-					};
+						var printButton = layer.querySelector(".information-window>button");
+						printButton.onclick = function() {
+							layer.style.display = "none";
+							layer.querySelector(".information-window").style.display = "none";
+						};
+					} else {
+						var failMessage = layer.querySelector(".fail-message");
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = returnMessage;
+						saleWindow.style.display = "none";
+						failMessage.style.display = "block";
+						setTimeout(function() {
+							failMessage.style.display = "none";
+							saleWindow.style.display = "block";
+						}, 2000);
+					}
 				}
 			};
 		};
@@ -319,6 +334,9 @@
 				</div>
 			</div>
 			<button type="button">打印</button>
+		</div>
+		<div class="fail-message">
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

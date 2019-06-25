@@ -73,19 +73,20 @@ public class Book_sale extends HttpServlet {
 
 		String membersJsonString = null;
 		try {
-			membersJsonString = membersDao.search_members(new String[]{"MEMBERS.MID MID", "BOOK_PURCHASE", "STATUS", "MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE"}, "PHONE_NUMBER", phone_number, -1);
+			membersJsonString = membersDao.search_members(new String[] { "MEMBERS.MID MID", "BOOK_PURCHASE", "STATUS",
+					"MEMBERS_GROUP.MNAME MGNAME", "MEMBERS.MNAME MNAME", "BALANCE" }, "PHONE_NUMBER", phone_number, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		if ("[]".equals(membersJsonString)) {
-			writer.write("{\"errorMessage\":\"此用户不存在\"}");
+			writer.write("{\"message\":\"此用户不存在\"}");
 			writer.close();
 			return;
 		}
 		JSONArray membersJsonArray = new JSONArray(membersJsonString);
 		JSONObject membersJsonObject = membersJsonArray.getJSONObject(0);
 		if ("0".equals(membersJsonObject.getString("STATUS"))) {
-			writer.write("{\"errorMessage\":\"此用户已办理挂失\"}");
+			writer.write("{\"message\":\"此用户已办理挂失\"}");
 			writer.close();
 			return;
 		}
@@ -111,13 +112,13 @@ public class Book_sale extends HttpServlet {
 		int book_purchase = Integer.valueOf(membersJsonObject.getString("BOOK_PURCHASE"));
 
 		if (balance < retail_price * discount * quantity / 10) {
-			writer.write("{\"errorMessage\":\"余额不足\"}");
+			writer.write("{\"message\":\"用户余额不足\"}");
 			writer.close();
 			return;
 		}
 
 		if (inventory < quantity) {
-			writer.write("{\"errorMessage\":\"库存不足\"}");
+			writer.write("{\"message\":\"库存不足\"}");
 			writer.close();
 			return;
 		}
@@ -141,7 +142,7 @@ public class Book_sale extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		String salesRecordJsonString = null;
 		try {
 			salesRecordJsonString = salesRecordDao.search_sales_record(null, "MAX(SERIAL_NUMBER)", null, -1);
@@ -152,14 +153,15 @@ public class Book_sale extends HttpServlet {
 		JSONObject salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
 		String serial_number = salesRecordJsonObject.getString("SERIAL_NUMBER");
 		try {
-			salesRecordJsonString = salesRecordDao.search_sales_record(new String[]{"DATE_OF_SALE"}, "SERIAL_NUMBER", serial_number, -1);
+			salesRecordJsonString = salesRecordDao.search_sales_record(new String[] { "DATE_OF_SALE" }, "SERIAL_NUMBER",
+					serial_number, -1);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		salesRecordJsonArray = new JSONArray(salesRecordJsonString);
 		salesRecordJsonObject = salesRecordJsonArray.getJSONObject(0);
 		String date_of_sale = salesRecordJsonObject.getString("DATE_OF_SALE");
-		
+
 		JSONObject resultJson = new JSONObject();
 		resultJson.put("SERIAL_NUMBER", serial_number);
 		resultJson.put("ISBN", ISBN);
@@ -169,7 +171,8 @@ public class Book_sale extends HttpServlet {
 		resultJson.put("UNIT_PRICE", retail_price * discount / 10);
 		resultJson.put("QUANTITY", quantity);
 		resultJson.put("DATE_OF_SALE", date_of_sale);
-		
+		resultJson.put("message", "success");
+
 		writer.write(resultJson.toString());
 		writer.close();
 	}

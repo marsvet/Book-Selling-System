@@ -84,13 +84,16 @@
 					xmlHttpRequest.readyState == 4 &&
 					xmlHttpRequest.status == 200
 				) {
-					if (xmlHttpRequest.responseText == "1") {
+					var returnMessage = JSON.parse(xmlHttpRequest.responseText)["message"];
+					if (returnMessage === "success") {
 						formWindow.style.display = "none";
 						successMessage.style.display = "block";
 						setTimeout(function() {
 							history.back(-1);
 						}, 1000);
 					} else {
+						var oSpan = failMessage.querySelector("span");
+						oSpan.innerHTML = returnMessage;
 						formWindow.style.display = "none";
 						failMessage.style.display = "block";
 						setTimeout(function() {
@@ -142,7 +145,7 @@
 			<img src="images/completed.png"> <span>退货成功</span>
 		</div>
 		<div class="fail-message">
-			<img src="images/error.png"> <span>请检查流水号和会员姓名是否填写正确</span>
+			<img src="images/error.png"> <span></span>
 		</div>
 	</div>
 </body>

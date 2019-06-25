@@ -188,6 +188,7 @@
 		var layer = document.getElementById("layer");
 		var addWindow = layer.querySelector("#add-manager");
 		var oInput = addWindow.querySelectorAll("input");
+		var oSelect = addWindow.querySelector("select");
 		var confirmButton = addWindow.querySelector(".confirm");
 		var cancelButton = addWindow.querySelector(".cancel");
 		var successMessage = layer.querySelector(".success-message");
@@ -207,7 +208,7 @@
 					return;
 
 			var oSpan = failMessage.querySelector("span");
-			if (oInput[4].value != oInput[5].value) {
+			if (oInput[3].value != oInput[4].value) {
 				oSpan.innerHTML = "两次输入的密码不一致";
 				addWindow.style.display = "none";
 				failMessage.style.display = "block";
@@ -225,7 +226,7 @@
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"mname=" + oInput[0].value + "&phone_number=" + oInput[1].value + "&identification=" + oInput[2].value + "&permission=" + oInput[3].value + "&password=" + oInput[4].value
+				"mname=" + oInput[0].value + "&phone_number=" + oInput[1].value + "&identification=" + oInput[2].value + "&permission=" + oSelect.value + "&password=" + oInput[3].value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -430,10 +431,7 @@
 		}
 
 		confirmButton.onclick = function() {
-			var oInput = document.querySelector("#modify-permission>input");
-
-			if (!oInput.value)
-				return;
+			var oSelect = document.querySelector("#modify-permission>select");
 
 			var xmlHttpRequest = new XMLHttpRequest();
 			xmlHttpRequest.open("POST", "Manager_modify", true);
@@ -442,7 +440,7 @@
 				"application/x-www-form-urlencoded"
 			);
 			xmlHttpRequest.send(
-				"option=3&phone_number=" + phoneNumber + "&permission=" + oInput.value
+				"option=3&phone_number=" + phoneNumber + "&permission=" + oSelect.value
 			);
 			xmlHttpRequest.onreadystatechange = function() {
 				if (
@@ -461,7 +459,7 @@
 						}, 1000);
 
 						/* 前端同步更新 */
-						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oInput.value;
+						currentItem.querySelector(".column3>p:nth-child(2)").innerHTML = oSelect.value;
 					} else {
 						var oSpan = failMessage.querySelector("span");
 						oSpan.innerHTML = returnMessage;

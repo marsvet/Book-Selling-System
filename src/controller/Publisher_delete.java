@@ -54,7 +54,7 @@ public class Publisher_delete extends HttpServlet {
 		try {
 			publisherDao.delete_from_publisher(pname);
 		} catch (ClassNotFoundException | SQLException e) {
-			writer.write("{\"message\":\"系统内部错误\"}");
+			writer.write("{\"message\":\"请先删除从此出版社进货的图书\"}");
 			writer.close();
 			return;
 		}

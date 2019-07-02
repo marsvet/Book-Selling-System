@@ -11,8 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class PublisherDao {
-	private final String URL = "jdbc:oracle:thin:@localhost:1521:xe"; // 连接字符串
-	private final String USERNAME = "bookselling"; // 用户名
+	private final String URL = "jdbc:oracle:thin:@localhost:1521:orcl"; // 连接字符串
+	private final String USERNAME = "\"C##bookselling\""; // 用户名
 	private final String PASSWORD = "bookselling"; // 密码
 
 	public String search_publisher(String[] attrs, String key, String value, int page)
